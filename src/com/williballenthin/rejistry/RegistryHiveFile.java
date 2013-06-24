@@ -4,14 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class RegistryHiveFile implements RegistryHive {
 	private ByteBuffer _buf;
+	
+	
+	/** @throws IOException if the file cannot be accessed or is larger than 2GB. */
 	public RegistryHiveFile(File file) throws IOException {
 		this._buf = ByteBuffer.wrap(RegistryHiveFile.readFile(file)).asReadOnlyBuffer();
+		this._buf.order(ByteOrder.BIG_ENDIAN);
 	}
 	
 	public RegistryKey getRoot() {
+		// TODO(wb): this.
 		throw new UnsupportedOperationException();
 	}
 	
