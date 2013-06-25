@@ -16,7 +16,7 @@ public class RegistryHiveFile implements RegistryHive {
 	public RegistryHiveFile(File file) throws IOException {
 		this._buf = ByteBuffer.wrap(RegistryHiveFile.readFile(file))
 				.asReadOnlyBuffer();
-		this._buf.order(ByteOrder.BIG_ENDIAN);
+		this._buf.order(ByteOrder.LITTLE_ENDIAN);
 	}
 
 	public RegistryKey getRoot() {
