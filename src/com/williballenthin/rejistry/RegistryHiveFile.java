@@ -27,6 +27,11 @@ public class RegistryHiveFile implements RegistryHive {
 	public ByteBuffer getBuf() {
 		return this._buf.asReadOnlyBuffer();
 	}
+	
+	public REGFHeader getHeader() throws RegistryParseException {
+		this._buf.position(0x0);
+		return new REGFHeader(this._buf.slice());
+	}
 
 	/**
 	 * readFile reads an entire file into a byte array.

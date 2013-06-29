@@ -2,12 +2,11 @@ package com.williballenthin.rejistry;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class REGFHeader {
-	private final ByteBuffer _buf;
-	
 	private static final int MAGIC_OFFSET = 0x0;
 	private static final int SEQ1_OFFSET = 0x4;
 	private static final int SEQ2_OFFSET = 0x8;
@@ -15,9 +14,14 @@ public class REGFHeader {
 	private static final int MINOR_VERSION_OFFSET = 0x18;
 	private static final int HIVE_NAME_OFFSET = 0x30;
 	private static final int LAST_HBIN_OFFSET_OFFSET = 0x28;
+	private static final int FIRST_HBIN_OFFSET = 0x1000;
+	
+	private final ByteBuffer _buf;
 	
 	public REGFHeader(ByteBuffer buf) throws RegistryParseException {
 		this._buf = buf;
+		this._buf.order(ByteOrder.LITTLE_ENDIAN);
+		this._buf.position(0x0);
 		
 		int magic = this._buf.getInt(MAGIC_OFFSET);
 		if (magic != 0x66676572) {
@@ -38,16 +42,7 @@ public class REGFHeader {
 	}
 	
 	public String getHiveName() throws UnsupportedEncodingException {
-		byte[] sb = null;
-		this._buf.get(sb, HIVE_NAME_OFFSET, 0x40);
-		String s = new String(sb, "ASCII");
-		
-		int eos = s.indexOf(0x0);
-		if (eos != -1) {
-			return s = s.substring(0, eos);
-		}
-		
-		return s;
+		return U.getWString(this._buf, HIVE_NAME_OFFSET, 0x40);
 	}
 	
 	public int getLastHbinOffset() {
@@ -63,11 +58,12 @@ public class REGFHeader {
 		return new Iterator<HBIN>() {
 			///< offset is the absolute byte offset of the HBIN that would
 			///    be returned in the next call to .next()
-			private int _offset = 0x1000;
+			private int _offset = FIRST_HBIN_OFFSET;
 			private HBIN _next = null;
 			
 			@Override
 			public boolean hasNext() {
+				REGFHeader.this._buf.position(0);
 				if ( ! (REGFHeader.this._buf.capacity() > _offset && 
 						REGFHeader.this.getLastHbinOffset() > _offset &&
 						REGFHeader.this._buf.getInt(_offset) == 0x6E696268)) {
@@ -88,7 +84,13 @@ public class REGFHeader {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException("No more HBINs");
 				}
-				_offset += 0x1000;
+				if (this._next.getRelativeOffsetNextHBIN() <= 0x0) {
+					// this really shouldn't be a NoSuchElementException, but its all we've got
+					//  we want to make sure we're always moving forward at each call to avoid
+					//  endless loops.
+					throw new NoSuchElementException("Invalid offset to next HBIN");
+				}
+				_offset += this._next.getRelativeOffsetNextHBIN();
 				// we use this cached copy rather than creating the object here
 				//   because the object construction may fail due to an invalid 
 				//   structure.

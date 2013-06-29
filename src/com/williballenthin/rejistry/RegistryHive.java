@@ -16,4 +16,11 @@ public interface RegistryHive {
 	 */
 	public ByteBuffer getBuf();
 
+	
+	/**
+	 * getHeader fetches the REGFHeader that defined metadata
+	 *   for this Registry hive.
+	 * @return The header of the hive.
+	 */
+	public REGFHeader getHeader() throws RegistryParseException;
 }
