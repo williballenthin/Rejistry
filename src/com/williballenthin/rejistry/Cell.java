@@ -36,4 +36,26 @@ public class Cell {
 	public boolean isActive() {
 		return this._buf.getInt(LENGTH_OFFSET) < 0x0;
 	}
+	
+	/**
+	 * getHBIN fetches the parent HBIN of this cell.
+	 * visibility: package-protected
+	 * @return The HBIN that contains this cell.
+	 */
+	HBIN getHBIN() {
+		return this._hbin;
+	}
+	
+	/**
+	 * getData fetches a view into the data of this cell.
+	 *   The returned ByteBuffer is limited to the range of
+	 *   this cell, and now beyond.
+	 * @return A view of the data in this cell.
+	 */
+	public ByteBuffer getData() {
+		this._buf.position(0x4);
+		ByteBuffer data = this._buf.slice();
+		data.limit(this.getLength() - 0x4);
+		return data;
+	}
 }

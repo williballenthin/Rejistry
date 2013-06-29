@@ -6,12 +6,16 @@ import java.nio.ByteOrder;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * REGFHeader is the file header structure for a Registry hive.
+ */
 public class REGFHeader {
 	private static final int MAGIC_OFFSET = 0x0;
 	private static final int SEQ1_OFFSET = 0x4;
 	private static final int SEQ2_OFFSET = 0x8;
 	private static final int MAJOR_VERSION_OFFSET = 0x14;
 	private static final int MINOR_VERSION_OFFSET = 0x18;
+	private static final int FIRST_KEY_OFFSET_OFFSET = 0x24;
 	private static final int HIVE_NAME_OFFSET = 0x30;
 	private static final int LAST_HBIN_OFFSET_OFFSET = 0x28;
 	private static final int FIRST_HBIN_OFFSET = 0x1000;
@@ -113,5 +117,20 @@ public class REGFHeader {
 	 */
 	public HBIN getFirstHBIN() throws NoSuchElementException {
 		return this.getHBINs().next();
+	}
+	
+	/**
+	 * getRootNKRecord fetches the NKRecord that the Hive claims as the root.
+	 * @return The root NKRecord.
+	 * @throws RegistryParseException
+	 */
+	public NKRecord getRootNKRecord() throws RegistryParseException {
+		int first_cell_offset = this._buf.getInt(FIRST_KEY_OFFSET_OFFSET);
+		try {
+			Cell cell = this.getFirstHBIN().getCellAtOffset(first_cell_offset);
+			return new NKRecord(cell);
+		} catch (NoSuchElementException e) {
+			throw new RegistryParseException("No HBINs from which to fetch the root NKRecord");
+		}
 	}
 }

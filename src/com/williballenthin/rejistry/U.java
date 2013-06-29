@@ -16,6 +16,17 @@ public class U {
 		d(hex(i));
 	}
 	
+	/**
+	 * getWString fetches `length` bytes from `buf` at relative offset `offset`
+	 *   and interprets them as a UTF-16LE string.
+	 *   This will return only the characters found before any NULL characters
+	 *   (not NULL bytes).
+	 * @param buf The buffer from which to read the string.
+	 * @param offset The relative offset into the buffer from which to read.
+	 * @param length The number of bytes to read.
+	 * @return A string decoded from UTF-16LE bytes.
+	 * @throws UnsupportedEncodingException
+	 */
 	public static final String getWString(ByteBuffer buf, int offset, int length) throws UnsupportedEncodingException {
 		int saved_position = buf.position();
 		byte[] sb = new byte[length];
@@ -28,9 +39,37 @@ public class U {
 		
 		int eos = s.indexOf(0x0);
 		if (eos != -1) {
-			return s = s.substring(0, eos);
+			s = s.substring(0, eos);
 		}
 		
+		return s;
+	}
+	
+	/**
+	 * getWString fetches `length` bytes from `buf` at relative offset `offset`
+	 *   and interprets them as an ASCII string.
+	 *   This will return only the characters found before any NULL characters
+	 *   (not NULL bytes).
+	 * @param buf The buffer from which to read the string.
+	 * @param offset The relative offset into the buffer from which to read.
+	 * @param length The number of bytes to read.
+	 * @return A string decoded from ASCII bytes.
+	 * @throws UnsupportedEncodingException
+	 */
+	public static final String getASCIIString(ByteBuffer buf, int offset, int length) throws UnsupportedEncodingException {
+		int saved_position = buf.position();
+		byte[] sb = new byte[length];
+		
+		buf.position(offset);
+		buf.get(sb, 0, length);
+		buf.position(saved_position);
+		
+		String s = new String(sb, "ASCII");
+		
+		int eos = s.indexOf(0x0);
+		if (eos != -1) {
+			s = s.substring(0, eos);
+		}
 		return s;
 	}
 }

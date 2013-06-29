@@ -5,6 +5,10 @@ import java.nio.ByteOrder;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * HBIN is an allocation unit of a Registry hive that is usually 
+ *   0x1000 bytes long.
+ */
 public class HBIN {
 	private static final int FIRST_HBIN_OFFSET_OFFSET = 0x4;
 	private static final int NEXT_HBIN_OFFSET_OFFSET = 0x8;
@@ -71,10 +75,13 @@ public class HBIN {
 						HBIN.this.getRelativeOffsetNextHBIN() > _offset)) { 
 					return false;
 				}
-				HBIN.this._buf.position(_offset);
+				
 				
 				try {
-					_next = new Cell(HBIN.this, HBIN.this._buf.slice());
+					HBIN.this._buf.position(_offset);
+					ByteBuffer data = HBIN.this._buf.slice();
+					data.limit(HBIN.this.getRelativeOffsetNextHBIN());
+					_next = new Cell(HBIN.this, data);
 				} catch (RegistryParseException e) {
 					return false;
 				}
@@ -104,5 +111,21 @@ public class HBIN {
 				throw new UnsupportedOperationException();
 			}
 		};		
+	}
+	
+	/**
+	 * getCellAtOffset returns a Cell that starts at the given relative offset into
+	 *   this HBIN.
+	 *   Note, no checking of the Cell structure is performed, so accessing the correct
+	 *   offset is up to the caller.
+	 *   Note, this function is meant for internal use.
+	 *   Visibility: package-protected.
+	 * @param offset The relative offset into this HBIN to construct the Cell.
+	 * @return A Cell that starts at the given offset.
+	 * @throws RegistryParseException
+	 */
+	Cell getCellAtOffset(int offset) throws RegistryParseException {
+		this._buf.position(offset);
+		return new Cell(this, this._buf.slice());
 	}
 }
