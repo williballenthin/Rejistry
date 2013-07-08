@@ -1,5 +1,8 @@
 package com.williballenthin.rejistry;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
@@ -59,10 +62,12 @@ public class REGFHeader extends BinaryBlock {
      *
      * @return An iterator over the HBINs of this hive.
      */
+    @Nullable
     public Iterator<HBIN> getHBINs() {
         return new Iterator<HBIN>() {
             ///< offset is the relative byte offset of the HBIN that would be returned in the next call to .next()
             private int _offset = FIRST_HBIN_OFFSET;
+            @Nullable
             private HBIN _next = null;
 
             @Override
@@ -81,6 +86,7 @@ public class REGFHeader extends BinaryBlock {
                 return true;
             }
 
+            @Nullable
             @Override
             public HBIN next() {
                 if (!this.hasNext()) {
@@ -123,6 +129,7 @@ public class REGFHeader extends BinaryBlock {
      * @return The root NKRecord.
      * @throws RegistryParseException if the creation of the NKRecord fails, or there are no HBINs in this Hive.
      */
+    @NotNull
     public NKRecord getRootNKRecord() throws RegistryParseException {
         int first_cell_offset = this.getDword(FIRST_KEY_OFFSET_OFFSET);
         try {

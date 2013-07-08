@@ -1,5 +1,7 @@
 package com.williballenthin.rejistry;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 
 public interface RegistryHive {
@@ -8,6 +10,7 @@ public interface RegistryHive {
      *
      * @return The root of the hive.
      */
+    @NotNull
     public RegistryKey getRoot();
 
     /**
@@ -24,5 +27,6 @@ public interface RegistryHive {
      *
      * @return The header of the hive.
      */
+    @NotNull
     public REGFHeader getHeader() throws RegistryParseException;
 }

@@ -20,11 +20,14 @@ public class BinaryBlock {
 
     /**
      * getDword parses a 32bit number from the specified relative offset with the range 0-2**32 - 1;
+     *   This method help self-document code. It is equivalent to the instance._buf.getInt(instance._offset + offset),
+     *   but reads a lot better.
      *
      * @param offset The relative offset from which to parse the number.
      * @return A non-negative 32bit number with the range 0-2**32-1;
      */
     protected int getDword(int offset) {
+        //noinspection PointlessBitwiseExpression
         return this._buf.getInt(this._offset + offset) & 0xFFFFFFFF;
     }
 

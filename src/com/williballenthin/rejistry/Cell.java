@@ -1,5 +1,7 @@
 package com.williballenthin.rejistry;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 
 public class Cell extends BinaryBlock {
@@ -56,6 +58,7 @@ public class Cell extends BinaryBlock {
      * @return The NKRecord found within this Cell.
      * @throws RegistryParseException if the creation of the NKRecord fails.
      */
+    @NotNull
     public NKRecord getNKRecord() throws RegistryParseException {
         return new NKRecord(this._hbin, this._buf, this.getAbsoluteOffset(0x4));
     }

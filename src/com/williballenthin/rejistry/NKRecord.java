@@ -1,5 +1,7 @@
 package com.williballenthin.rejistry;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 
 public class NKRecord extends Record {
@@ -24,6 +26,7 @@ public class NKRecord extends Record {
         return this.getDword(CLASSNAME_OFFSET_OFFSET) != 0xFFFFFFFF;
     }
 
+    @NotNull
     public String getClassname() {
         int offset = this.getDword(CLASSNAME_OFFSET_OFFSET);
         int length = this.getDword(CLASSNAME_LENGTH_OFFSET);
