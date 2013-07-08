@@ -15,7 +15,7 @@ public class NKRecord extends Record {
     public NKRecord(HBIN hbin, ByteBuffer buf, int offset) throws RegistryParseException {
         super(hbin, buf, offset);
 
-        if (this.getMagic() != "NK") {
+        if (!this.getMagic().equals("NK")) {
             throw new RegistryParseException("NKRecord invalid magic header");
         }
     }

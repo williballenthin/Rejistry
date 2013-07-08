@@ -6,7 +6,7 @@ public class Cell extends BinaryBlock {
     private static final int LENGTH_OFFSET = 0x0;
     private final HBIN _hbin;
 
-    public Cell(HBIN hbin, ByteBuffer buf, int offset) throws RegistryParseException {
+    public Cell(HBIN hbin, ByteBuffer buf, int offset) {
         super(buf, offset);
         this._hbin = hbin;
     }
@@ -33,16 +33,6 @@ public class Cell extends BinaryBlock {
      */
     public boolean isActive() {
         return this.getDword(LENGTH_OFFSET) < 0x0;
-    }
-
-    /**
-     * getHBIN fetches the parent HBIN of this cell.
-     * visibility: package-protected
-     *
-     * @return The HBIN that contains this cell.
-     */
-    HBIN getHBIN() {
-        return this._hbin;
     }
 
     /**

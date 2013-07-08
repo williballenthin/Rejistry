@@ -6,9 +6,9 @@ import java.nio.ByteOrder;
 
 public class BinaryBlock {
     ///< The backing bytes for this structure. This ByteBuffer may be shared across many instances.
-    protected static ByteBuffer _buf;
+    protected final ByteBuffer _buf;
     ///< The absolute offset into the ByteBuffer at which this structure begins.
-    protected static int _offset;
+    protected final int _offset;
 
     public BinaryBlock(ByteBuffer buf, int offset) {
         this._buf = buf;

@@ -76,12 +76,7 @@ public class HBIN extends BinaryBlock {
                     return false;
                 }
 
-
-                try {
-                    _next = new Cell(HBIN.this, HBIN.this._buf, HBIN.this.getAbsoluteOffset(_offset));
-                } catch (RegistryParseException e) {
-                    return false;
-                }
+                _next = new Cell(HBIN.this, HBIN.this._buf, HBIN.this.getAbsoluteOffset(_offset));
                 return true;
             }
 
@@ -120,9 +115,8 @@ public class HBIN extends BinaryBlock {
      *
      * @param offset The relative offset into this HBIN to construct the Cell.
      * @return A Cell that starts at the given offset.
-     * @throws RegistryParseException if the creation of the Cell fails.
      */
-    Cell getCellAtOffset(int offset) throws RegistryParseException {
+    Cell getCellAtOffset(int offset) {
         return new Cell(this, this._buf, this.getAbsoluteOffset(offset));
     }
 }
