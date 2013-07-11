@@ -26,6 +26,8 @@ def main():
             else:
                 print "hbin %d, cell %d, is allocated: yes" % (i, j)
             print "hbin %d, cell %d, length: %s" % (i, j, cell.size())
+    print "root nkrecord has classname: %s" % (reg._regf.first_key().has_classname())
+    print "root nkrecord classname: %s" % (reg._regf.first_key().classname())
 
 if __name__ == "__main__":
     main()
