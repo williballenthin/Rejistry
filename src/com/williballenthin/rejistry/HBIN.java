@@ -60,7 +60,7 @@ public class HBIN extends BinaryBlock {
     }
 
     /**
-     * getCellss creates an iterator over the Cells that make up this HBIN.
+     * getCells creates an iterator over the Cells that make up this HBIN.
      *   Note, The iterator does not support the `remove` operation.
      *
      * @return An iterator over the Cells in this HBIN.
@@ -81,7 +81,7 @@ public class HBIN extends BinaryBlock {
                     return false;
                 }
 
-                _next = new Cell(HBIN.this, HBIN.this._buf, HBIN.this.getAbsoluteOffset(_offset));
+                _next = new Cell(HBIN.this._buf, HBIN.this.getAbsoluteOffset(_offset));
                 return true;
             }
 
@@ -124,6 +124,6 @@ public class HBIN extends BinaryBlock {
      */
     @NotNull
     Cell getCellAtOffset(int offset) {
-        return new Cell(this, this._buf, this.getAbsoluteOffset(offset));
+        return new Cell(this._buf, this.getAbsoluteOffset(offset));
     }
 }

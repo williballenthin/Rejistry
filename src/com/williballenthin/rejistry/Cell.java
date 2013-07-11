@@ -6,11 +6,9 @@ import java.nio.ByteBuffer;
 
 public class Cell extends BinaryBlock {
     private static final int LENGTH_OFFSET = 0x0;
-    private final HBIN _hbin;
 
-    public Cell(HBIN hbin, ByteBuffer buf, int offset) {
+    public Cell(ByteBuffer buf, int offset) {
         super(buf, offset);
-        this._hbin = hbin;
     }
 
     /**
@@ -60,6 +58,6 @@ public class Cell extends BinaryBlock {
      */
     @NotNull
     public NKRecord getNKRecord() throws RegistryParseException {
-        return new NKRecord(this._hbin, this._buf, this.getAbsoluteOffset(0x4));
+        return new NKRecord(this._buf, this.getAbsoluteOffset(0x4));
     }
 }
