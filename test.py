@@ -30,6 +30,7 @@ def main():
     print "root nkrecord classname: %s" % (reg._regf.first_key().classname())
     print "root nkrecord timestamp: %s" % (reg._regf.first_key().timestamp().isoformat("T") + "Z")
     print "root nkrecord is root: %s" % (reg._regf.first_key().is_root())
+    print "root nkrecord name: %s" % (reg._regf.first_key().name())
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,9 @@ public class NKRecord extends Record {
     private static final int IS_ROOT_OFFSET = 0x02;
     private static final int TIMESTAMP_OFFSET = 0x04;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
+    private static final int NAME_LENGTH_OFFSET = 0x48;
     private static final int CLASSNAME_LENGTH_OFFSET = 0x4A;
+    private static final int NAME_OFFSET = 0x4C;
 
     /**
      *
@@ -71,5 +73,16 @@ public class NKRecord extends Record {
      */
     public boolean isRootKey() {
         return this.getWord(IS_ROOT_OFFSET) == 0x2C;
+    }
+
+    /**
+     * getName fetches the name of the Registry key represented by this NKRecord. It is not the
+     *   full path, but a single path component.
+     * @return The name of the associated Registry key.
+     * @throws UnsupportedEncodingException if the ASCII name of the NKRecord cannot be decoded.
+     */
+    public String getName() throws UnsupportedEncodingException {
+        int length = this.getDword(NAME_LENGTH_OFFSET);
+        return this.getASCIIString(NAME_OFFSET, length);
     }
 }

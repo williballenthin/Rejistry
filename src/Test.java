@@ -78,5 +78,6 @@ public class Test {
         System.out.println("root nkrecord classname: " + reg.getHeader().getRootNKRecord().getClassname());
         System.out.println("root nkrecord timestamp: " + getDatetimeString(reg.getHeader().getRootNKRecord().getTimestamp()));
         System.out.println("root nkrecord is root: " + getBooleanString(reg.getHeader().getRootNKRecord().isRootKey()));
+        System.out.println("root nkrecord name: " + reg.getHeader().getRootNKRecord().getName());
     }
 }
