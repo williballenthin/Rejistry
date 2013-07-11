@@ -12,7 +12,15 @@ class U {
         return String.format("%x", i);
     }
 
+    public static String hex(long i) {
+        return String.format("%x", i);
+    }
+
     public static void hex_out(int i) {
+        d(hex(i));
+    }
+
+    public static void hex_out(long i) {
         d(hex(i));
     }
 

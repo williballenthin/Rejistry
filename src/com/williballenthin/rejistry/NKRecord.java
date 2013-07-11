@@ -2,8 +2,10 @@ package com.williballenthin.rejistry;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.GregorianCalendar;
 
 public class NKRecord extends Record {
+    private static final int TIMESTAMP_OFFSET = 0x04;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
     private static final int CLASSNAME_LENGTH_OFFSET = 0x4A;
 
@@ -27,11 +29,14 @@ public class NKRecord extends Record {
 
     /**
      *
-     * @return
+     * @return The classname, if it exists, or the empty string.
      * @throws UnsupportedEncodingException
      * @throws RegistryParseException
      */
     public String getClassname() throws UnsupportedEncodingException, RegistryParseException {
+        if ( ! this.hasClassname()) {
+            return "";
+        }
         int offset = this.getDword(CLASSNAME_OFFSET_OFFSET);
         int length = this.getDword(CLASSNAME_LENGTH_OFFSET);
 
@@ -43,5 +48,9 @@ public class NKRecord extends Record {
         }
 
         return U.parseWString(b, 0, length);
+    }
+
+    public GregorianCalendar getTimestamp() {
+        return this.getWindowsTimestamp(TIMESTAMP_OFFSET);
     }
 }

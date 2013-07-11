@@ -41,7 +41,7 @@ public class Cell extends BinaryBlock {
      * @return A view of the data in this cell.
      */
     public ByteBuffer getData() {
-        this._buf.position(0x4);
+        this._buf.position(this.getAbsoluteOffset(0x4));
         ByteBuffer data = this._buf.slice();
         data.limit(this.getLength() - 0x4);
         return data;

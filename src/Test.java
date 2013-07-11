@@ -5,6 +5,9 @@ import com.williballenthin.rejistry.RegistryParseException;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 
@@ -21,7 +24,11 @@ public class Test {
         } else {
             return "False";
         }
+    }
 
+    private static DateFormat isoformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+    private static String getDatetimeString(GregorianCalendar c) {
+        return isoformat.format(c.getTime());
     }
 
     /**
@@ -65,9 +72,10 @@ public class Test {
 
             i++;
 
-//            break; // TODO(wb): removeme
+            //break; // TODO(wb): removeme
         }
         System.out.println("root nkrecord has classname: " + getBooleanString(reg.getHeader().getRootNKRecord().hasClassname()));
         System.out.println("root nkrecord classname: " + reg.getHeader().getRootNKRecord().getClassname());
+        System.out.println("root nkrecord timestamp: " + getDatetimeString(reg.getHeader().getRootNKRecord().getTimestamp()));
     }
 }

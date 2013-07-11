@@ -3,6 +3,8 @@ package com.williballenthin.rejistry;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class BinaryBlock {
     ///< The backing bytes for this structure. This ByteBuffer may be shared across many instances.
@@ -29,6 +31,19 @@ public class BinaryBlock {
     protected int getDword(int offset) {
         //noinspection PointlessBitwiseExpression
         return this._buf.getInt(this._offset + offset) & 0xFFFFFFFF;
+    }
+
+    /**
+     * getQword parses a 64bit number from the specified relative offset with the range 0-2**64 - 1;
+     *   This method help self-document code. It is equivalent to the instance._buf.getLong(instance._offset + offset),
+     *   but reads a lot better.
+     *
+     * @param offset The relative offset from which to parse the number.
+     * @return A non-negative 64bit number with the range 0-2**64-1;
+     */
+    protected long getQword(int offset) {
+        //noinspection PointlessBitwiseExpression
+        return this._buf.getLong(this._offset + offset) & 0xFFFFFFFFFFFFFFFFL;
     }
 
     /**
@@ -86,6 +101,19 @@ public class BinaryBlock {
             s = s.substring(0, eos);
         }
         return s;
+    }
+
+    /**
+     * getWindowsTimestamp fetches the 8-byte Windows timestamp at the relative offset.
+     *   Note, no bounds checking is performed.
+     *   The datetime is in UTC and has a resolution of milliseconds
+     * @param offset The relative offset intot he buffer from which to read.
+     * @return The datetime in UTC.
+     */
+    protected GregorianCalendar getWindowsTimestamp(int offset) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTimeInMillis((long)(this.getQword(offset) * 1e-4 - 11644473600000L));
+        return c;
     }
 
     /**
