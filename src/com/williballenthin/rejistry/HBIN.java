@@ -70,9 +70,8 @@ public class HBIN extends BinaryBlock {
 
             @Override
             public boolean hasNext() {
-
                 if (!(HBIN.this._buf.capacity() > HBIN.this.getAbsoluteOffset(_offset) &&
-                        HBIN.this.getRelativeOffsetNextHBIN() > HBIN.this.getAbsoluteOffset(_offset))) {
+                        HBIN.this.getRelativeOffsetNextHBIN() > _offset)) {
                     return false;
                 }
 

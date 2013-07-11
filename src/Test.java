@@ -11,6 +11,20 @@ import java.util.Iterator;
 public class Test {
 
     /**
+     * This is silly, but it formats the same way Python does by default.
+     * @param b
+     * @return
+     */
+    private static String getBooleanString(boolean b) {
+        if (b) {
+            return "True";
+        } else {
+            return "False";
+        }
+
+    }
+
+    /**
      * @param args
      * @throws IOException
      * @throws RegistryParseException
@@ -50,6 +64,10 @@ public class Test {
             }
 
             i++;
+
+//            break; // TODO(wb): removeme
         }
+        System.out.println("root nkrecord has classname: " + getBooleanString(reg.getHeader().getRootNKRecord().hasClassname()));
+        System.out.println("root nkrecord classname: " + reg.getHeader().getRootNKRecord().getClassname());
     }
 }

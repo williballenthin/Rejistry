@@ -11,13 +11,13 @@ public class NKRecord extends Record {
      *
      * @param buf
      * @param offset
-     * @throws RegistryParseException if the magic header is not the ASCII string "NK".
+     * @throws RegistryParseException if the magic header is not the ASCII string "nk".
      */
     public NKRecord(ByteBuffer buf, int offset) throws RegistryParseException {
         super(buf, offset);
 
-        if (!this.getMagic().equals("NK")) {
-            throw new RegistryParseException("NKRecord invalid magic header");
+        if (!this.getMagic().equals("nk")) {
+            throw new RegistryParseException("NKRecord invalid magic header, expected \"nk\", got: " + this.getMagic());
         }
     }
 

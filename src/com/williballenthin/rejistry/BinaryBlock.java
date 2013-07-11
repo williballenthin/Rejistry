@@ -46,7 +46,7 @@ public class BinaryBlock {
         int saved_position = this._buf.position();
         byte[] sb = new byte[length];
 
-        this._buf.position(offset);
+        this._buf.position(this._offset + offset);
         this._buf.get(sb, 0, length);
         this._buf.position(saved_position);
 
@@ -75,7 +75,7 @@ public class BinaryBlock {
         int saved_position = this._buf.position();
         byte[] sb = new byte[length];
 
-        this._buf.position(offset);
+        this._buf.position(this._offset + offset);
         this._buf.get(sb, 0, length);
         this._buf.position(saved_position);
 

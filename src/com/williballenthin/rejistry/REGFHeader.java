@@ -69,7 +69,7 @@ public class REGFHeader extends BinaryBlock {
             @Override
             public boolean hasNext() {
                 if (!(REGFHeader.this._buf.capacity() > REGFHeader.this.getAbsoluteOffset(_offset) &&
-                        REGFHeader.this.getLastHbinOffset() > REGFHeader.this.getAbsoluteOffset(_offset) &&
+                        REGFHeader.this.getLastHbinOffset() + 1 > REGFHeader.this.getAbsoluteOffset(_offset) &&
                         REGFHeader.this.getDword(_offset) == 0x6E696268)) {
                     return false;
                 }
