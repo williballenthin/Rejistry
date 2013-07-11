@@ -3,7 +3,6 @@ package com.williballenthin.rejistry;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class BinaryBlock {
@@ -18,6 +17,19 @@ public class BinaryBlock {
 
         this._buf.order(ByteOrder.LITTLE_ENDIAN);
         this._buf.position(0x0);
+    }
+
+    /**
+     * getDword parses a 16bit number from the specified relative offset with the range 0-2**16 - 1;
+     *   This method help self-document code. It is equivalent to the instance._buf.getShort(instance._offset + offset),
+     *   but reads a lot better.
+     *
+     * @param offset The relative offset from which to parse the number.
+     * @return A non-negative 16bit number with the range 0-2**16-1;
+     */
+    protected int getWord(int offset) {
+        //noinspection PointlessBitwiseExpression
+        return this._buf.getShort(this._offset + offset) & 0xFFFF;
     }
 
     /**
