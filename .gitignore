@@ -10,3 +10,6 @@ bin/*
 *.ear
 Rejistry.iml
 .idea/*
+NTUSER.DAT
+java.txt
+python.txt
