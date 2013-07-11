@@ -1,8 +1,5 @@
 package com.williballenthin.rejistry;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -65,12 +62,10 @@ public class HBIN extends BinaryBlock {
      *
      * @return An iterator over the Cells in this HBIN.
      */
-    @NotNull
     public Iterator<Cell> getCells() {
         return new Iterator<Cell>() {
             ///< offset is the relative byte offset of the Cell that would be returned in the next call to .next()
             private int _offset = FIRST_CELL_OFFSET;
-            @Nullable
             private Cell _next = null;
 
             @Override
@@ -85,7 +80,6 @@ public class HBIN extends BinaryBlock {
                 return true;
             }
 
-            @NotNull
             @Override
             public Cell next() {
                 if (!this.hasNext()) {
@@ -122,7 +116,6 @@ public class HBIN extends BinaryBlock {
      * @param offset The relative offset into this HBIN to construct the Cell.
      * @return A Cell that starts at the given offset.
      */
-    @NotNull
     Cell getCellAtOffset(int offset) {
         return new Cell(this._buf, this.getAbsoluteOffset(offset));
     }

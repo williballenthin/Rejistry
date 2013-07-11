@@ -1,7 +1,5 @@
 package com.williballenthin.rejistry;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
@@ -16,7 +14,7 @@ public class NKRecord extends Record {
      * @throws RegistryParseException if the magic header is not the ASCII string "NK".
      */
     public NKRecord(ByteBuffer buf, int offset) throws RegistryParseException {
-        super(hbin, buf, offset);
+        super(buf, offset);
 
         if (!this.getMagic().equals("NK")) {
             throw new RegistryParseException("NKRecord invalid magic header");
@@ -27,7 +25,12 @@ public class NKRecord extends Record {
         return this.getDword(CLASSNAME_OFFSET_OFFSET) != 0xFFFFFFFF;
     }
 
-    @NotNull
+    /**
+     *
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws RegistryParseException
+     */
     public String getClassname() throws UnsupportedEncodingException, RegistryParseException {
         int offset = this.getDword(CLASSNAME_OFFSET_OFFSET);
         int length = this.getDword(CLASSNAME_LENGTH_OFFSET);

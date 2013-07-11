@@ -1,7 +1,5 @@
 package com.williballenthin.rejistry;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -19,7 +17,6 @@ public class RegistryHiveFile implements RegistryHive {
         this._buf.order(ByteOrder.LITTLE_ENDIAN);
     }
 
-    @NotNull
     public RegistryKey getRoot() {
         // TODO(wb): this.
         throw new UnsupportedOperationException();
@@ -29,7 +26,6 @@ public class RegistryHiveFile implements RegistryHive {
         return this._buf.asReadOnlyBuffer();
     }
 
-    @NotNull
     public REGFHeader getHeader() throws RegistryParseException {
         return new REGFHeader(this._buf, 0x0);
     }
@@ -41,7 +37,6 @@ public class RegistryHiveFile implements RegistryHive {
      * @return A byte array that contains the file.
      * @throws IOException
      */
-    @NotNull
     private static byte[] readFile(File file) throws IOException {
         RandomAccessFile f = new RandomAccessFile(file, "r");
         try {

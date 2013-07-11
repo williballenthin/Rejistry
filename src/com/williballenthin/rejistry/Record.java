@@ -8,11 +8,9 @@ import java.nio.ByteBuffer;
  *   within Cells.
  */
 public class Record extends BinaryBlock {
-    protected final HBIN _hbin;
 
-    public Record(HBIN hbin, ByteBuffer buf, int offset) {
+    public Record(ByteBuffer buf, int offset) {
         super(buf, offset);
-        this._hbin = hbin;
     }
 
     /**
