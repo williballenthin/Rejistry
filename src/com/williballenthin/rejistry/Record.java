@@ -3,7 +3,7 @@ package com.williballenthin.rejistry;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-/*
+/**
  * Record is a common superclass to structures that are found
  *   within Cells.
  */

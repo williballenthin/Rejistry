@@ -2,6 +2,10 @@ package com.williballenthin.rejistry;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Cell is a simple container for other data. The container has just the its size as a header.
+ *   The remainder is arbitrary data.
+ */
 public class Cell extends BinaryBlock {
     private static final int LENGTH_OFFSET = 0x0;
 

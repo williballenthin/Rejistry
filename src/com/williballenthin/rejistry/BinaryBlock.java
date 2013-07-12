@@ -5,6 +5,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.GregorianCalendar;
 
+/**
+ * BinaryBlock is a convenient parsing structure. Its a bookmark into a view of bytes with
+ *   methods for accessing fields at relative offsets.
+ */
 public class BinaryBlock {
     ///< The backing bytes for this structure. This ByteBuffer may be shared across many instances.
     protected final ByteBuffer _buf;

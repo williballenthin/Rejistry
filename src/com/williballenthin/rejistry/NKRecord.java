@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.GregorianCalendar;
 
+/**
+ * NKRecord is the structure that backs a Registry key. It has a name, and may have values and subkeys.
+ */
 public class NKRecord extends Record {
     private static final int IS_ROOT_OFFSET = 0x02;
     private static final int TIMESTAMP_OFFSET = 0x04;

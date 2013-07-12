@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 /**
  * HBIN is an allocation unit of a Registry hive that is usually
- * 0x1000 bytes long.
+ *   0x1000 bytes long.
  */
 public class HBIN extends BinaryBlock {
     private static final int FIRST_HBIN_OFFSET_OFFSET = 0x4;
