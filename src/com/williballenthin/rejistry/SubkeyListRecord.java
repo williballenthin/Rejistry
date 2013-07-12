@@ -8,11 +8,6 @@ import java.util.NoSuchElementException;
 public abstract class SubkeyListRecord extends Record implements SubkeyList {
     private static final int SUBKEY_COUNT_OFFSET = 0x2;
 
-    /**
-     *
-     * @param buf
-     * @param offset
-     */
     public SubkeyListRecord(ByteBuffer buf, int offset) {
         super(buf, offset);
     }

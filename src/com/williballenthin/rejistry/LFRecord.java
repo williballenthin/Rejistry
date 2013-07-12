@@ -4,9 +4,6 @@ import java.nio.ByteBuffer;
 
 public class LFRecord extends DirectSubkeyListRecord implements SubkeyList {
     /**
-     *
-     * @param buf
-     * @param offset
      * @throws RegistryParseException if the magic header is not the ASCII string "nk".
      */
     public LFRecord(ByteBuffer buf, int offset) throws RegistryParseException {

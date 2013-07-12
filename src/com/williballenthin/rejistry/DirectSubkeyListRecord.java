@@ -7,11 +7,6 @@ import java.util.NoSuchElementException;
 public class DirectSubkeyListRecord extends SubkeyListRecord {
     private final int _item_size;
 
-    /**
-     *
-     * @param buf
-     * @param offset
-     */
     public DirectSubkeyListRecord(ByteBuffer buf, int offset, int item_size) throws RegistryParseException {
         super(buf, offset);
         this._item_size = item_size;

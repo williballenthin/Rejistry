@@ -5,9 +5,6 @@ import java.util.Iterator;
 
 public class RIRecord extends SubkeyListRecord {
     /**
-     *
-     * @param buf
-     * @param offset
      * @throws RegistryParseException if the magic header is not the ASCII string "ri".
      */
     public RIRecord(ByteBuffer buf, int offset) throws RegistryParseException {
