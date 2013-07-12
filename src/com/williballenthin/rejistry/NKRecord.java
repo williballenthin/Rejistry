@@ -8,6 +8,7 @@ public class NKRecord extends Record {
     private static final int IS_ROOT_OFFSET = 0x02;
     private static final int TIMESTAMP_OFFSET = 0x04;
     private static final int PARENT_RECORD_OFFSET_OFFSET = 0x10;
+    private static final int VALUES_NUMBER_OFFSET = 0x24;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
     private static final int NAME_LENGTH_OFFSET = 0x48;
     private static final int CLASSNAME_LENGTH_OFFSET = 0x4A;
@@ -115,5 +116,18 @@ public class NKRecord extends Record {
         int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
         Cell c = new Cell(this._buf, parent_offset);
         return c.getNKRecord();
+    }
+
+    /**
+     * getNumberOfValues fetches the number of values the key has.
+     * @return the number of values the key has.
+     */
+    public int getNumberOfValues() {
+        int num = this.getDword(VALUES_NUMBER_OFFSET);
+        if (num == 0xFFFFFFFF) {
+            return 0;
+        } else {
+            return  num;
+        }
     }
 }
