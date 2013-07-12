@@ -1,10 +1,8 @@
 package com.williballenthin.rejistry;
 
 import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public class LFRecord extends Record implements SubkeyList {
+public class LFRecord extends DirectSubkeyListRecord implements SubkeyList {
     /**
      *
      * @param buf
@@ -12,37 +10,10 @@ public class LFRecord extends Record implements SubkeyList {
      * @throws RegistryParseException if the magic header is not the ASCII string "nk".
      */
     public LFRecord(ByteBuffer buf, int offset) throws RegistryParseException {
-        super(buf, offset);
+        super(buf, offset, 0x8);
 
         if (!this.getMagic().equals("lf")) {
             throw new RegistryParseException("LFRecord invalid magic header, expected \"lf\", got: " + this.getMagic());
         }
-    }
-
-    public Iterator<NKRecord> getSubkeys() {
-        return new Iterator<NKRecord>() {
-            @Override
-            public boolean hasNext() {
-                // TODO(wb): implement me
-                throw new UnsupportedOperationException("TODO");
-            }
-
-            @Override
-            public NKRecord next() {
-                // TODO(wb): implement me
-                throw new UnsupportedOperationException("TODO");
-            }
-
-            @Override
-            public void remove() {
-                // TODO(wb): implement me
-                throw new UnsupportedOperationException("Remove not supported for subkey lists");
-            }
-        };
-    }
-
-    public NKRecord getSubkey(String name) throws NoSuchElementException {
-        // TODO(wb): implement me
-        throw new UnsupportedOperationException("TODO");
     }
 }

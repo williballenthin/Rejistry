@@ -137,10 +137,10 @@ public class NKRecord extends Record {
     }
 
     /**
-     * getNumberOfSubkeys fetches the number of subkeys the key has.
+     * getSubkeyCount fetches the number of subkeys the key has.
      * @return the number of subkeys the key has.
      */
-    public int getNumberOfSubkeys() {
+    public int getSubkeyCount() {
         int num = this.getDword(SUBKEY_NUMBER_OFFSET);
         if (num == 0xFFFFFFFF) {
             return 0;
@@ -150,7 +150,7 @@ public class NKRecord extends Record {
     }
 
     public SubkeyList getSubkeyList() throws RegistryParseException {
-        if (this.getNumberOfSubkeys() == 0) {
+        if (this.getSubkeyCount() == 0) {
             return new EmptySubkeyList();
         }
 

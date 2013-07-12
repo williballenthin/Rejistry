@@ -2,9 +2,8 @@ package com.williballenthin.rejistry;
 
 import java.nio.ByteBuffer;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-public class RIRecord extends Record implements SubkeyList {
+public class RIRecord extends SubkeyListRecord {
     /**
      *
      * @param buf
@@ -39,10 +38,5 @@ public class RIRecord extends Record implements SubkeyList {
                 throw new UnsupportedOperationException("Remove not supported for subkey lists");
             }
         };
-    }
-
-    public NKRecord getSubkey(String name) throws NoSuchElementException {
-        // TODO(wb): implement me
-        throw new UnsupportedOperationException("TODO");
     }
 }
