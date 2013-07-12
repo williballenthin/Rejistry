@@ -31,6 +31,8 @@ def main():
     print "root nkrecord timestamp: %s" % (reg._regf.first_key().timestamp().isoformat("T") + "Z")
     print "root nkrecord is root: %s" % (reg._regf.first_key().is_root())
     print "root nkrecord name: %s" % (reg._regf.first_key().name())
+    print "root nkrecord has parent: %s" % (reg._regf.first_key().has_parent_key())
+    print "root nkrecord number of values: %d" % (reg._regf.first_key().values_number())
 
 if __name__ == "__main__":
     main()
