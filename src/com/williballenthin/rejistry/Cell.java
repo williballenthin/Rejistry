@@ -1,5 +1,6 @@
 package com.williballenthin.rejistry;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 /**
@@ -8,6 +9,7 @@ import java.nio.ByteBuffer;
  */
 public class Cell extends BinaryBlock {
     private static final int LENGTH_OFFSET = 0x0;
+    private static final int DATA_OFFSET = 0x4;
 
     public Cell(ByteBuffer buf, int offset) {
         super(buf, offset);
@@ -45,10 +47,14 @@ public class Cell extends BinaryBlock {
      * @return A view of the data in this cell.
      */
     public ByteBuffer getData() {
-        this._buf.position(this.getAbsoluteOffset(0x4));
+        this._buf.position(this.getAbsoluteOffset(DATA_OFFSET));
         ByteBuffer data = this._buf.slice();
-        data.limit(this.getLength() - 0x4);
+        data.limit(this.getLength() - DATA_OFFSET);
         return data;
+    }
+
+    public String getDataSignature() throws UnsupportedEncodingException {
+        return this.getASCIIString(DATA_OFFSET, 0x2);
     }
 
     /**
@@ -59,6 +65,50 @@ public class Cell extends BinaryBlock {
      * @throws RegistryParseException if the creation of the NKRecord fails.
      */
     public NKRecord getNKRecord() throws RegistryParseException {
-        return new NKRecord(this._buf, this.getAbsoluteOffset(0x4));
+        return new NKRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getLFRecord interprets the data of this cell as an LHRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The LFRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the NKRecord fails.
+     */
+    public LFRecord getLFRecord() throws RegistryParseException {
+        return new LFRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getLHRecord interprets the data of this cell as an LHRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The LHRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the NKRecord fails.
+     */
+    public LHRecord getLHRecord() throws RegistryParseException {
+        return new LHRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getRIRecord interprets the data of this cell as an RIRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The RIRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the NKRecord fails.
+     */
+    public RIRecord getRIRecord() throws RegistryParseException {
+        return new RIRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getLIRecord interprets the data of this cell as an LIRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The LIRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the NKRecord fails.
+     */
+    public LIRecord getLIRecord() throws RegistryParseException {
+        return new LIRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
     }
 }

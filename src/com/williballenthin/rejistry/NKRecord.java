@@ -12,6 +12,7 @@ public class NKRecord extends Record {
     private static final int TIMESTAMP_OFFSET = 0x04;
     private static final int PARENT_RECORD_OFFSET_OFFSET = 0x10;
     private static final int SUBKEY_NUMBER_OFFSET = 0x14;
+    private static final int SUBKEY_LIST_OFFSET_OFFSET = 0x1C;
     private static final int VALUES_NUMBER_OFFSET = 0x24;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
     private static final int NAME_LENGTH_OFFSET = 0x48;
@@ -145,6 +146,33 @@ public class NKRecord extends Record {
             return 0;
         } else {
             return num;
+        }
+    }
+
+    public SubkeyList getSubkeyList() throws RegistryParseException {
+        if (this.getNumberOfSubkeys() == 0) {
+            return new EmptySubkeyList();
+        }
+
+        int subkeylist_offset = REGFHeader.FIRST_HBIN_OFFSET + SUBKEY_LIST_OFFSET_OFFSET;
+        Cell c = new Cell(this._buf, subkeylist_offset);
+
+        String magic;
+        try {
+            magic = c.getDataSignature();
+        } catch (UnsupportedEncodingException e) {
+            throw new RegistryParseException("Unexpected subkey list type: binary");
+        }
+        if (magic.equals("lf")) {
+            return c.getLFRecord();
+        } else if (magic.equals("lh")) {
+            return c.getLHRecord();
+        } else if (magic.equals("ri")) {
+            return c.getRIRecord();
+        } else if (magic.equals("li")) {
+            return c.getLIRecord();
+        } else {
+            throw new RegistryParseException("Unexpected subkey list type: " + magic);
         }
     }
 }

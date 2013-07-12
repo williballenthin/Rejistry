@@ -9,6 +9,8 @@ import java.nio.ByteBuffer;
  */
 public class Record extends BinaryBlock {
 
+    private static final int MAGIC_OFFSET = 0x0;
+
     public Record(ByteBuffer buf, int offset) {
         super(buf, offset);
     }
@@ -24,7 +26,7 @@ public class Record extends BinaryBlock {
      */
     public String getMagic() throws RegistryParseException {
         try {
-            return this.getASCIIString(0x0, 0x2);
+            return this.getASCIIString(MAGIC_OFFSET, 0x2);
         } catch (UnsupportedEncodingException e) {
             throw new RegistryParseException("Unexpected magic header.");
         }
