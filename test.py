@@ -33,6 +33,7 @@ def main():
     print "root nkrecord name: %s" % (reg._regf.first_key().name())
     print "root nkrecord has parent: %s" % (reg._regf.first_key().has_parent_key())
     print "root nkrecord number of values: %d" % (reg._regf.first_key().values_number())
+    print "root nkrecord number of subkeys: %d" % (reg._regf.first_key().subkey_number())
 
 if __name__ == "__main__":
     main()

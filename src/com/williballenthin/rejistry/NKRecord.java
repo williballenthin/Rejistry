@@ -8,6 +8,7 @@ public class NKRecord extends Record {
     private static final int IS_ROOT_OFFSET = 0x02;
     private static final int TIMESTAMP_OFFSET = 0x04;
     private static final int PARENT_RECORD_OFFSET_OFFSET = 0x10;
+    private static final int SUBKEY_NUMBER_OFFSET = 0x14;
     private static final int VALUES_NUMBER_OFFSET = 0x24;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
     private static final int NAME_LENGTH_OFFSET = 0x48;
@@ -127,7 +128,20 @@ public class NKRecord extends Record {
         if (num == 0xFFFFFFFF) {
             return 0;
         } else {
-            return  num;
+            return num;
+        }
+    }
+
+    /**
+     * getNumberOfSubkeys fetches the number of subkeys the key has.
+     * @return the number of subkeys the key has.
+     */
+    public int getNumberOfSubkeys() {
+        int num = this.getDword(SUBKEY_NUMBER_OFFSET);
+        if (num == 0xFFFFFFFF) {
+            return 0;
+        } else {
+            return num;
         }
     }
 }
