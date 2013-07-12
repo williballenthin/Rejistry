@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 public class NKRecord extends Record {
     private static final int IS_ROOT_OFFSET = 0x02;
     private static final int TIMESTAMP_OFFSET = 0x04;
+    private static final int PARENT_RECORD_OFFSET_OFFSET = 0x10;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
     private static final int NAME_LENGTH_OFFSET = 0x48;
     private static final int CLASSNAME_LENGTH_OFFSET = 0x4A;
@@ -84,5 +85,35 @@ public class NKRecord extends Record {
     public String getName() throws UnsupportedEncodingException {
         int length = this.getDword(NAME_LENGTH_OFFSET);
         return this.getASCIIString(NAME_OFFSET, length);
+    }
+
+    /**
+     * hasParentRecord returns True if the key has a parent key.
+     * @return True if the key has a parent key, False otherwise.
+     */
+    public boolean hasParentRecord() {
+        if ( ! this.isRootKey()) {
+            return false;
+        }
+
+        try {
+            this.getParentRecord();
+            return true;
+        } catch (RegistryParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * getParentRecord fetches the parent NKRecord of this record.
+     * @return the parent NKRecord of this record.
+     * @throws RegistryParseException If the NKRecord cannot be parsed from the cell data.
+     */
+    public NKRecord getParentRecord() throws RegistryParseException {
+        int offset = this.getDword(PARENT_RECORD_OFFSET_OFFSET);
+
+        int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
+        Cell c = new Cell(this._buf, parent_offset);
+        return c.getNKRecord();
     }
 }
