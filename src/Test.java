@@ -81,6 +81,6 @@ public class Test {
         System.out.println("root nkrecord name: " + reg.getHeader().getRootNKRecord().getName());
         System.out.println("root nkrecord has parent: " + getBooleanString(reg.getHeader().getRootNKRecord().hasParentRecord()));
         System.out.println("root nkrecord number of values: " + reg.getHeader().getRootNKRecord().getNumberOfValues());
-        System.out.println("root nkrecord number of subkeys: " + reg.getHeader().getRootNKRecord().getNumberOfSubkeys());
+        System.out.println("root nkrecord number of subkeys: " + reg.getHeader().getRootNKRecord().getSubkeyCount());
     }
 }
