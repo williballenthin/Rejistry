@@ -3,7 +3,9 @@ package com.williballenthin.rejistry;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 /**
  * BinaryBlock is a convenient parsing structure. Its a bookmark into a view of bytes with
@@ -126,8 +128,8 @@ public class BinaryBlock {
      * @param offset The relative offset intot he buffer from which to read.
      * @return The datetime in UTC.
      */
-    protected GregorianCalendar getWindowsTimestamp(int offset) {
-        GregorianCalendar c = new GregorianCalendar();
+    protected Calendar getWindowsTimestamp(int offset) {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         c.setTimeInMillis((long)(this.getQword(offset) * 1e-4 - 11644473600000L));
         return c;
     }

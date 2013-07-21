@@ -1,5 +1,28 @@
+import re
 import argparse
 from Registry import Registry
+
+
+def printNKRecord(record, prefix):
+    print prefix + "nkrecord has classname: %s" % (record.has_classname())
+    print prefix + "nkrecord classname: %s" % (record.classname())
+    print hex(record.unpack_word(0x4A))
+    print prefix + "nkrecord timestamp: %s" % (record.timestamp().isoformat("T") + "Z")
+    print prefix + "nkrecord is root: %s" % (record.is_root())
+    print prefix + "nkrecord name: %s" % (record.name())
+    print prefix + "nkrecord has parent: %s" % (record.has_parent_key())
+    print prefix + "nkrecord number of values: %d" % (record.values_number())
+    print prefix + "nkrecord number of subkeys: %d" % (record.subkey_number())
+
+
+def recurseNKRecord(record, prefix):
+    printNKRecord(record, prefix)
+
+    if record.subkey_number() == 0:
+        return
+    for r in record.subkey_list().keys():
+        print "  " + prefix + r.name()
+        recurseNKRecord(r, "    " + prefix)
 
 
 def main():
@@ -26,14 +49,13 @@ def main():
             else:
                 print "hbin %d, cell %d, is allocated: yes" % (i, j)
             print "hbin %d, cell %d, length: %s" % (i, j, cell.size())
-    print "root nkrecord has classname: %s" % (reg._regf.first_key().has_classname())
-    print "root nkrecord classname: %s" % (reg._regf.first_key().classname())
-    print "root nkrecord timestamp: %s" % (reg._regf.first_key().timestamp().isoformat("T") + "Z")
-    print "root nkrecord is root: %s" % (reg._regf.first_key().is_root())
-    print "root nkrecord name: %s" % (reg._regf.first_key().name())
-    print "root nkrecord has parent: %s" % (reg._regf.first_key().has_parent_key())
-    print "root nkrecord number of values: %d" % (reg._regf.first_key().values_number())
-    print "root nkrecord number of subkeys: %d" % (reg._regf.first_key().subkey_number())
+        #break
+    printNKRecord(reg._regf.first_key(), "root ")
+    for record in reg._regf.first_key().subkey_list().keys():
+        print "  " + record.name()
+        printNKRecord(record, "    ")
+
+    recurseNKRecord(reg._regf.first_key(), "")
 
 if __name__ == "__main__":
     main()

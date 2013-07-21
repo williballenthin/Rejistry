@@ -2,12 +2,14 @@ package com.williballenthin.rejistry;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
  * NKRecord is the structure that backs a Registry key. It has a name, and may have values and subkeys.
  */
 public class NKRecord extends Record {
+    public static final String MAGIC = "nk";
     private static final int IS_ROOT_OFFSET = 0x02;
     private static final int TIMESTAMP_OFFSET = 0x04;
     private static final int PARENT_RECORD_OFFSET_OFFSET = 0x10;
@@ -28,7 +30,7 @@ public class NKRecord extends Record {
     public NKRecord(ByteBuffer buf, int offset) throws RegistryParseException {
         super(buf, offset);
 
-        if (!this.getMagic().equals("nk")) {
+        if (!this.getMagic().equals(NKRecord.MAGIC)) {
             throw new RegistryParseException("NKRecord invalid magic header, expected \"nk\", got: " + this.getMagic());
         }
     }
@@ -52,13 +54,14 @@ public class NKRecord extends Record {
         if ( ! this.hasClassname()) {
             return "";
         }
-        int offset = this.getDword(CLASSNAME_OFFSET_OFFSET);
-        int length = this.getDword(CLASSNAME_LENGTH_OFFSET);
 
+        int offset = this.getDword(CLASSNAME_OFFSET_OFFSET);
+        int length = this.getWord(CLASSNAME_LENGTH_OFFSET);
         int classname_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
         Cell c = new Cell(this._buf, classname_offset);
         ByteBuffer b = c.getData();
         if (length > b.limit()) {
+            U.hex_out(length);
             throw new RegistryParseException("Cell size insufficient for parsing classname");
         }
 
@@ -70,7 +73,7 @@ public class NKRecord extends Record {
      *   Note, this timestamp is mutable, so don't change it, or I'll start returning copies.
      * @return The modification timestamp of this key, in UTC, with millisecond precision.
      */
-    public GregorianCalendar getTimestamp() {
+    public Calendar getTimestamp() {
         return this.getWindowsTimestamp(TIMESTAMP_OFFSET);
     }
 
@@ -89,7 +92,7 @@ public class NKRecord extends Record {
      * @throws UnsupportedEncodingException if the ASCII name of the NKRecord cannot be decoded.
      */
     public String getName() throws UnsupportedEncodingException {
-        int length = this.getDword(NAME_LENGTH_OFFSET);
+        int length = this.getWord(NAME_LENGTH_OFFSET);
         return this.getASCIIString(NAME_OFFSET, length);
     }
 
@@ -98,7 +101,7 @@ public class NKRecord extends Record {
      * @return True if the key has a parent key, False otherwise.
      */
     public boolean hasParentRecord() {
-        if ( ! this.isRootKey()) {
+        if (this.isRootKey()) {
             return false;
         }
 
@@ -137,7 +140,7 @@ public class NKRecord extends Record {
     }
 
     /**
-     * getSubkeyCount fetches the number of subkeys the key has.
+     * getListLength fetches the number of subkeys the key has.
      * @return the number of subkeys the key has.
      */
     public int getSubkeyCount() {
@@ -149,30 +152,19 @@ public class NKRecord extends Record {
         }
     }
 
+    /**
+     * getSubkeyList fetches the subkeys of this key.
+     * @return the SubkeyList of the subkeys of this key.
+     * @throws RegistryParseException if the subkey lists cannot be parsed
+     *   from the cell data.
+     */
     public SubkeyList getSubkeyList() throws RegistryParseException {
         if (this.getSubkeyCount() == 0) {
             return new EmptySubkeyList();
         }
 
-        int subkeylist_offset = REGFHeader.FIRST_HBIN_OFFSET + SUBKEY_LIST_OFFSET_OFFSET;
+        int subkeylist_offset = REGFHeader.FIRST_HBIN_OFFSET + this.getDword(SUBKEY_LIST_OFFSET_OFFSET);
         Cell c = new Cell(this._buf, subkeylist_offset);
-
-        String magic;
-        try {
-            magic = c.getDataSignature();
-        } catch (UnsupportedEncodingException e) {
-            throw new RegistryParseException("Unexpected subkey list type: binary");
-        }
-        if (magic.equals("lf")) {
-            return c.getLFRecord();
-        } else if (magic.equals("lh")) {
-            return c.getLHRecord();
-        } else if (magic.equals("ri")) {
-            return c.getRIRecord();
-        } else if (magic.equals("li")) {
-            return c.getLIRecord();
-        } else {
-            throw new RegistryParseException("Unexpected subkey list type: " + magic);
-        }
+        return c.getSubkeyList();
     }
 }

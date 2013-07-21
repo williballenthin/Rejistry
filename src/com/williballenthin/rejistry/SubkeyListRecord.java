@@ -6,18 +6,18 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public abstract class SubkeyListRecord extends Record implements SubkeyList {
-    private static final int SUBKEY_COUNT_OFFSET = 0x2;
+    private static final int LIST_LENGTH_OFFSET = 0x2;
 
     public SubkeyListRecord(ByteBuffer buf, int offset) {
         super(buf, offset);
     }
 
     /**
-     * getSubkeyCount fetches the number of subkeys this list has.
+     * getListLength fetches the number of subkeys this list has.
      * @return the number of subkeys this list has.
      */
-    public int getSubkeyCount() {
-        return this.getWord(SUBKEY_COUNT_OFFSET);
+    public int getListLength() {
+        return this.getWord(LIST_LENGTH_OFFSET);
     }
 
     public abstract Iterator<NKRecord> getSubkeys();

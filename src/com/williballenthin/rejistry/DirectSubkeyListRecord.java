@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class DirectSubkeyListRecord extends SubkeyListRecord {
+    private final int LIST_START_OFFSET = 0x4;
     private final int _item_size;
 
     public DirectSubkeyListRecord(ByteBuffer buf, int offset, int item_size) throws RegistryParseException {
@@ -15,7 +16,7 @@ public class DirectSubkeyListRecord extends SubkeyListRecord {
     public Iterator<NKRecord> getSubkeys() {
         return new Iterator<NKRecord>() {
             private int _index = 0;
-            private int _max_index = DirectSubkeyListRecord.this.getSubkeyCount();
+            private int _max_index = DirectSubkeyListRecord.this.getListLength();
             private NKRecord _next = null;
 
             @Override
@@ -24,7 +25,8 @@ public class DirectSubkeyListRecord extends SubkeyListRecord {
                     return false;
                 }
 
-                int offset = DirectSubkeyListRecord.this.getDword(this._index * DirectSubkeyListRecord.this._item_size);
+                int rel_off = DirectSubkeyListRecord.this.LIST_START_OFFSET + (this._index * DirectSubkeyListRecord.this._item_size);
+                int offset = DirectSubkeyListRecord.this.getDword(rel_off);
                 int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
                 Cell c = new Cell(DirectSubkeyListRecord.this._buf, parent_offset);
                 try {

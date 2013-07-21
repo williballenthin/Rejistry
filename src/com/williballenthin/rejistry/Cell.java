@@ -111,4 +111,32 @@ public class Cell extends BinaryBlock {
     public LIRecord getLIRecord() throws RegistryParseException {
         return new LIRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
     }
+
+    /**
+     * getSubkeyList interprets the data of this cell as a SubkeyList and
+     *   returns the parsed out structure.
+     * @return The SubkeyList found within this Cell.
+     * @throws RegistryParseException if the signature of the data is
+     *   incorrect, or the creation of the Subkey fails.
+     * TODO(wb): differentiate this failure cases.
+     */
+    public SubkeyList getSubkeyList() throws RegistryParseException {
+        String magic;
+        try {
+            magic = this.getDataSignature();
+        } catch (UnsupportedEncodingException e) {
+            throw new RegistryParseException("Unexpected subkey list type: binary");
+        }
+        if (magic.equals(LFRecord.MAGIC)) {
+            return this.getLFRecord();
+        } else if (magic.equals(LHRecord.MAGIC)) {
+            return this.getLHRecord();
+        } else if (magic.equals(RIRecord.MAGIC)) {
+            return this.getRIRecord();
+        } else if (magic.equals(LIRecord.MAGIC)) {
+            return this.getLIRecord();
+        } else {
+            throw new RegistryParseException("Unexpected subkey list type: " + magic);
+        }
+    }
 }

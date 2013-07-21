@@ -1,14 +1,12 @@
-import com.williballenthin.rejistry.Cell;
-import com.williballenthin.rejistry.HBIN;
-import com.williballenthin.rejistry.RegistryHiveFile;
-import com.williballenthin.rejistry.RegistryParseException;
+import com.williballenthin.rejistry.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.SimpleTimeZone;
 
 
 public class Test {
@@ -26,9 +24,32 @@ public class Test {
         }
     }
 
-    private static DateFormat isoformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-    private static String getDatetimeString(GregorianCalendar c) {
+    private static String getDatetimeString(Calendar c) {
+        DateFormat isoformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'");
+        isoformat.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
         return isoformat.format(c.getTime());
+    }
+
+    private static void printNKRecord(NKRecord record, String prefix) throws IOException, RegistryParseException {
+        System.out.println(prefix + "nkrecord has classname: " + getBooleanString(record.hasClassname()));
+        System.out.println(prefix + "nkrecord classname: " + record.getClassname());
+        System.out.println(prefix + "nkrecord timestamp: " + getDatetimeString(record.getTimestamp()));
+        System.out.println(prefix + "nkrecord is root: " + getBooleanString(record.isRootKey()));
+        System.out.println(prefix + "nkrecord name: " + record.getName());
+        System.out.println(prefix + "nkrecord has parent: " + getBooleanString(record.hasParentRecord()));
+        System.out.println(prefix + "nkrecord number of values: " + record.getNumberOfValues());
+        System.out.println(prefix + "nkrecord number of subkeys: " + record.getSubkeyCount());
+    }
+
+    private static void recurseNKRecord(NKRecord record, String prefix) throws IOException, RegistryParseException {
+        printNKRecord(record, prefix);
+
+        Iterator<NKRecord> nkit = record.getSubkeyList().getSubkeys();
+        while (nkit.hasNext()) {
+            NKRecord r = nkit.next();
+            System.out.println("  " + prefix + r.getName());
+            recurseNKRecord(r, "    " + prefix);
+        }
     }
 
     /**
@@ -74,13 +95,15 @@ public class Test {
 
             //break; // TODO(wb): removeme
         }
-        System.out.println("root nkrecord has classname: " + getBooleanString(reg.getHeader().getRootNKRecord().hasClassname()));
-        System.out.println("root nkrecord classname: " + reg.getHeader().getRootNKRecord().getClassname());
-        System.out.println("root nkrecord timestamp: " + getDatetimeString(reg.getHeader().getRootNKRecord().getTimestamp()));
-        System.out.println("root nkrecord is root: " + getBooleanString(reg.getHeader().getRootNKRecord().isRootKey()));
-        System.out.println("root nkrecord name: " + reg.getHeader().getRootNKRecord().getName());
-        System.out.println("root nkrecord has parent: " + getBooleanString(reg.getHeader().getRootNKRecord().hasParentRecord()));
-        System.out.println("root nkrecord number of values: " + reg.getHeader().getRootNKRecord().getNumberOfValues());
-        System.out.println("root nkrecord number of subkeys: " + reg.getHeader().getRootNKRecord().getSubkeyCount());
+        printNKRecord(reg.getHeader().getRootNKRecord(), "root ");
+
+        Iterator<NKRecord> nkit = reg.getHeader().getRootNKRecord().getSubkeyList().getSubkeys();
+        while (nkit.hasNext()) {
+            NKRecord record = nkit.next();
+            System.out.println("  " + record.getName());
+            printNKRecord(record, "    ");
+        }
+
+        recurseNKRecord(reg.getHeader().getRootNKRecord(), "");
     }
 }

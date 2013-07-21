@@ -3,37 +3,17 @@ package com.williballenthin.rejistry;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 
-public class LHRecord extends SubkeyListRecord  {
+public class LHRecord extends DirectSubkeyListRecord {
+    public static final String MAGIC = "lh";
+
     /**
      * @throws RegistryParseException if the magic header is not the ASCII string "lh".
      */
     public LHRecord(ByteBuffer buf, int offset) throws RegistryParseException {
-        super(buf, offset);
+        super(buf, offset, 0x8);
 
-        if (!this.getMagic().equals("lh")) {
+        if (!this.getMagic().equals(LHRecord.MAGIC)) {
             throw new RegistryParseException("LHRecord invalid magic header, expected \"lh\", got: " + this.getMagic());
         }
-    }
-
-    public Iterator<NKRecord> getSubkeys() {
-        return new Iterator<NKRecord>() {
-            @Override
-            public boolean hasNext() {
-                // TODO(wb): implement me
-                throw new UnsupportedOperationException("TODO");
-            }
-
-            @Override
-            public NKRecord next() {
-                // TODO(wb): implement me
-                throw new UnsupportedOperationException("TODO");
-            }
-
-            @Override
-            public void remove() {
-                // TODO(wb): implement me
-                throw new UnsupportedOperationException("Remove not supported for subkey lists");
-            }
-        };
     }
 }
