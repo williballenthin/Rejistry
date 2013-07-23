@@ -1,6 +1,7 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
 
-import java.io.UnsupportedEncodingException;
+import com.williballenthin.rejistry.*;
+
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -11,7 +12,7 @@ public class RIRecord extends SubkeyListRecord {
     private static final int LIST_ENTRY_SIZE = 0x4;
 
     /**
-     * @throws RegistryParseException if the magic header is not the ASCII string "ri".
+     * @throws com.williballenthin.rejistry.RegistryParseException if the magic header is not the ASCII string "ri".
      */
     public RIRecord(ByteBuffer buf, int offset) throws RegistryParseException {
         super(buf, offset);
@@ -38,7 +39,7 @@ public class RIRecord extends SubkeyListRecord {
                     return false;
                 }
 
-                int offset = RIRecord.this.getDword(RIRecord.this.LIST_START_OFFSET + (this._index * RIRecord.this.LIST_ENTRY_SIZE));
+                int offset = RIRecord.this.getDword(RIRecord.LIST_START_OFFSET + (this._index * RIRecord.LIST_ENTRY_SIZE));
                 int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
                 Cell c = new Cell(RIRecord.this._buf, parent_offset);
                 try {

@@ -1,4 +1,7 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
+
+import com.williballenthin.rejistry.BinaryBlock;
+import com.williballenthin.rejistry.RegistryParseException;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -22,7 +25,7 @@ public class Record extends BinaryBlock {
      * types, the magic values falls within the ASCII range.
      *
      * @return A two character string that is the magic record header.
-     * @throws RegistryParseException if the magic header is a two byte ASCII string.
+     * @throws com.williballenthin.rejistry.RegistryParseException if the magic header is a two byte ASCII string.
      */
     public String getMagic() throws RegistryParseException {
         try {

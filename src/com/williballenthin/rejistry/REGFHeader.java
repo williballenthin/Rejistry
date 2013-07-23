@@ -1,5 +1,7 @@
 package com.williballenthin.rejistry;
 
+import com.williballenthin.rejistry.record.NKRecord;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
@@ -17,8 +19,7 @@ public class REGFHeader extends BinaryBlock {
     private static final int FIRST_KEY_OFFSET_OFFSET = 0x24;
     private static final int HIVE_NAME_OFFSET = 0x30;
     private static final int LAST_HBIN_OFFSET_OFFSET = 0x28;
-    ///< scope: package protected
-    static final int FIRST_HBIN_OFFSET = 0x1000;
+    public static final int FIRST_HBIN_OFFSET = 0x1000;
 
     /**
      * @param buf

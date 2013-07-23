@@ -1,4 +1,8 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
+
+import com.williballenthin.rejistry.Cell;
+import com.williballenthin.rejistry.REGFHeader;
+import com.williballenthin.rejistry.RegistryParseException;
 
 import java.nio.ByteBuffer;
 import java.util.Iterator;

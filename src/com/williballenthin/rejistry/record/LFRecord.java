@@ -1,4 +1,6 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
+
+import com.williballenthin.rejistry.RegistryParseException;
 
 import java.nio.ByteBuffer;
 
@@ -6,7 +8,7 @@ public class LFRecord extends DirectSubkeyListRecord {
     public static final String MAGIC = "lf";
 
     /**
-     * @throws RegistryParseException if the magic header is not the ASCII string "lf".
+     * @throws com.williballenthin.rejistry.RegistryParseException if the magic header is not the ASCII string "lf".
      */
     public LFRecord(ByteBuffer buf, int offset) throws RegistryParseException {
         super(buf, offset, 0x8);

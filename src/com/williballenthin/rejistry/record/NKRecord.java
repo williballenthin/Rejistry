@@ -1,9 +1,10 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
+
+import com.williballenthin.rejistry.*;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * NKRecord is the structure that backs a Registry key. It has a name, and may have values and subkeys.
@@ -25,7 +26,7 @@ public class NKRecord extends Record {
      *
      * @param buf
      * @param offset
-     * @throws RegistryParseException if the magic header is not the ASCII string "nk".
+     * @throws com.williballenthin.rejistry.RegistryParseException if the magic header is not the ASCII string "nk".
      */
     public NKRecord(ByteBuffer buf, int offset) throws RegistryParseException {
         super(buf, offset);

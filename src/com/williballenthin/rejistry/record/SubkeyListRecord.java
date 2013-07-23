@@ -1,4 +1,4 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;

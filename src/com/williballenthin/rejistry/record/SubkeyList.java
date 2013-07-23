@@ -1,4 +1,4 @@
-package com.williballenthin.rejistry;
+package com.williballenthin.rejistry.record;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
