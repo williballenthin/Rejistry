@@ -1,5 +1,7 @@
 package com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype;
 
+import java.nio.ByteBuffer;
+
 /**
  * From: https://code.google.com/p/google-tv-pairing-protocol/source/browse/src/com/google/polo/pairing/HexDump.java?r=9dcabe2bcb08f554210f43e109f48b8e6ede2505
  *   which is Apache 2.0.
@@ -12,6 +14,18 @@ class HexDump
     public static String dumpHexString(byte[] array)
     {
         return dumpHexString(array, 0, array.length);
+    }
+
+    public static String dumpHexString(ByteBuffer buf) {
+        int saved_position = buf.position();
+        byte[] sb = new byte[buf.limit()];
+
+        buf.position(0x0);
+        for (int i = 0; i < buf.limit(); i++) {
+            sb[i] = buf.get();
+        }
+        buf.position(saved_position);
+        return dumpHexString(sb);
     }
 
     public static String dumpHexString(byte[] array, int offset, int length)

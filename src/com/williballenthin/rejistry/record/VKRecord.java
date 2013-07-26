@@ -22,7 +22,7 @@ public class VKRecord extends Record {
 
     private static final int SMALL_DATA_SIZE = 0x5;
     private static final int DB_DATA_SIZE = 0x3FD8;
-    private static final int LARGE_DATA_SIZE = 0x8000000;
+    private static final long LARGE_DATA_SIZE = 0x80000000L;
 
     /**
      *
@@ -109,17 +109,23 @@ public class VKRecord extends Record {
         RegistryValueType t = this.getValueType();
         long length = this.getDataLength();
         int offset = (int)this.getDataOffset();
+
+        if (length > LARGE_DATA_SIZE + DB_DATA_SIZE) {
+            throw new RegistryParseException("Value size too large: " + length);
+        }
+
         switch(t) {
             case REG_BIN:  // intentional fallthrough
             case REG_NONE: {
                 ByteBuffer data;
                 if (length > LARGE_DATA_SIZE) {
-                    data = ByteBuffer.allocate(0x4);
-                    for (int i = 0; i < 4; i++) {
-                        // TODO(wb): test this, it may write the bytes flipped.
-                        data.putChar(this.getChar(i));
+                    int bufSize = (int)(length - LARGE_DATA_SIZE);
+                    data = ByteBuffer.allocate(bufSize + 1);
+                    data.position(0x0);
+                    data.limit(bufSize + 1);
+                    for (int i = 0; i < bufSize; i++) {
+                        data.putChar(i, this.getChar(i));
                     }
-                    data.compact();
                 } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
                     Cell c = new Cell(this._buf, offset);
                     try {
@@ -139,7 +145,7 @@ public class VKRecord extends Record {
             case REG_SZ:  // intentional fallthrough
             case REG_EXPAND_SZ:
                 if (length > LARGE_DATA_SIZE) {
-                    return new StringValueType(this.getWString(offset, 0x4));
+                    return new StringValueType(this.parseWString(this._buf, offset, (int)(length - LARGE_DATA_SIZE)));
                 } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
                     Cell c = new Cell(this._buf, offset);
                     ByteBuffer data;

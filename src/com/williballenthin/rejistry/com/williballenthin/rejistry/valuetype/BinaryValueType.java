@@ -11,6 +11,6 @@ public class BinaryValueType implements ValueType {
 
     @Override
     public String toString() {
-        return HexDump.dumpHexString(this._b.array());
+        return HexDump.dumpHexString(this._b);
     }
 }
