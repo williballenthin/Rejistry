@@ -127,7 +127,7 @@ public class VKRecord extends Record {
             case REG_BIN:  // intentional fallthrough
             case REG_NONE: {
                 ByteBuffer data;
-                if (length > LARGE_DATA_SIZE) {
+                if (length >= LARGE_DATA_SIZE) {
                     int bufSize = (int)(length - LARGE_DATA_SIZE);
                     data = ByteBuffer.allocate(bufSize + 1);
                     data.position(0x0);
@@ -153,7 +153,7 @@ public class VKRecord extends Record {
 
             case REG_SZ:  // intentional fallthrough
             case REG_EXPAND_SZ:
-                if (length > LARGE_DATA_SIZE) {
+                if (length >= LARGE_DATA_SIZE) {
                     return new StringValueType(this.parseWString(this._buf, offset, (int)(length - LARGE_DATA_SIZE)));
                 } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
                     Cell c = new Cell(this._buf, offset);
@@ -181,7 +181,7 @@ public class VKRecord extends Record {
             }
 
             case REG_MULTI_SZ:
-                if (length > LARGE_DATA_SIZE) {
+                if (length >= LARGE_DATA_SIZE) {
                     return new MultiStringValueType();
                 } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
                     Cell c = new Cell(this._buf, offset);
@@ -274,7 +274,7 @@ public class VKRecord extends Record {
             if (eos != -1) {
                 String s = stringBuffer.substring(index, eos);
                 ret.add(s);
-                index += s.length();
+                index += s.length() + 1;
             } else {
                 ret.add(stringBuffer.substring(index));
                 break;
