@@ -25,6 +25,10 @@ public class BinaryBlock {
         this._buf.position(0x0);
     }
 
+    protected char getChar(int offset) {
+        return this._buf.getChar(this._offset + offset);
+    }
+
     /**
      * getDword parses a 16bit number from the specified relative offset with the range 0-2**16 - 1;
      *   This method help self-document code. It is equivalent to the instance._buf.getShort(instance._offset + offset),
@@ -44,12 +48,13 @@ public class BinaryBlock {
      *   This method help self-document code. It is equivalent to the instance._buf.getInt(instance._offset + offset),
      *   but reads a lot better.
      *
+     *
      * @param offset The relative offset from which to parse the number.
      * @return A non-negative 32bit number with the range 0-2**32-1.
      */
-    protected int getDword(int offset) {
+    protected long getDword(int offset) {
         //noinspection PointlessBitwiseExpression
-        return this._buf.getInt(this._offset + offset) & 0xFFFFFFFF;
+        return this._buf.getInt(this._offset + offset) & 0xFFFFFFFFL;
     }
 
     /**
@@ -60,9 +65,9 @@ public class BinaryBlock {
      * @param offset The relative offset from which to parse the number.
      * @return A non-negative 32bit number with the range 0-2**32-1.
      */
-    protected int getDwordBE(int offset) {
+    protected long getDwordBE(int offset) {
         this._buf.order(ByteOrder.BIG_ENDIAN);
-        int d = this._buf.getInt(this._offset + offset) & 0xFFFFFFFF;
+        long d = this._buf.getInt(this._offset + offset) & 0xFFFFFFFFL;
         this._buf.order(ByteOrder.LITTLE_ENDIAN);
         return d;
     }

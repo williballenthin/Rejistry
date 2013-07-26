@@ -79,7 +79,7 @@ public class VKRecord extends Record {
      */
     public RegistryValueType getValueType() throws RegistryParseException {
         try {
-            return RegistryValueType.valueOf(this.getDword(VALUE_TYPE_OFFSET));
+            return RegistryValueType.valueOf((int)this.getDword(VALUE_TYPE_OFFSET));
         } catch (InvalidParameterException e) {
             throw new RegistryParseException("Unexpected Registry value type: " + this.getDword(VALUE_TYPE_OFFSET));
         }
@@ -89,7 +89,7 @@ public class VKRecord extends Record {
      * getDataLength fetches the length of the value data.
      * @return The length of the value data.
      */
-    public int getDataLength() {
+    public long getDataLength() {
         return this.getDword(DATA_LENGTH_OFFSET);
     }
 
@@ -97,7 +97,7 @@ public class VKRecord extends Record {
      * getDataOffset fetches the *absolute* offset to the value data.
      * @return The absolute offset to the value data.
      */
-    public int getDataOffset() {
+    public long getDataOffset() {
         if (this.getDataLength() < SMALL_DATA_SIZE || this.getDataLength() >= LARGE_DATA_SIZE) {
             return this._offset + DATA_OFFSET_OFFSET;
         } else {
@@ -107,23 +107,27 @@ public class VKRecord extends Record {
 
     public ValueType getValue() throws RegistryParseException, UnsupportedEncodingException, NotImplementedException {
         RegistryValueType t = this.getValueType();
-        int length = this.getDataLength();
-        int offset = this.getDataOffset();
+        long length = this.getDataLength();
+        int offset = (int)this.getDataOffset();
         switch(t) {
             case REG_BIN:  // intentional fallthrough
             case REG_NONE: {
                 ByteBuffer data;
                 if (length > LARGE_DATA_SIZE) {
                     data = ByteBuffer.allocate(0x4);
-                    data.putInt(this.getDword(offset));
+                    for (int i = 0; i < 4; i++) {
+                        // TODO(wb): test this, it may write the bytes flipped.
+                        data.putChar(this.getChar(i));
+                    }
+                    data.compact();
                 } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
                     Cell c = new Cell(this._buf, offset);
                     try {
                         DBRecord db = c.getDBRecord();
-                        data = db.getData(length);
+                        data = db.getData((int)length);
                     } catch (RegistryParseException e) {
                         data = c.getData();
-                        data.limit(length);
+                        data.limit((int)length);
                     }
                 } else {
                     Cell c = new Cell(this._buf, offset);
@@ -141,16 +145,16 @@ public class VKRecord extends Record {
                     ByteBuffer data;
                     try {
                         DBRecord db = c.getDBRecord();
-                        data = db.getData(length);
+                        data = db.getData((int)length);
                     } catch (RegistryParseException e) {
                         data = c.getData();
-                        data.limit(length);
+                        data.limit((int)length);
                     }
-                    return new StringValueType(VKRecord.parseWString(data, 0x0, length));
+                    return new StringValueType(VKRecord.parseWString(data, 0x0, (int)length));
                 } else {
                     Cell c = new Cell(this._buf, offset);
                     ByteBuffer buf = c.getData();
-                    return new StringValueType(VKRecord.parseWString(buf, 0x0, length));
+                    return new StringValueType(VKRecord.parseWString(buf, 0x0, (int)length));
                 }
 
             case REG_DWORD:
@@ -169,16 +173,16 @@ public class VKRecord extends Record {
                     ByteBuffer data;
                     try {
                         DBRecord db = c.getDBRecord();
-                        data = db.getData(length);
+                        data = db.getData((int)length);
                     } catch (RegistryParseException e) {
                         data = c.getData();
-                        data.limit(length);
+                        data.limit((int)length);
                     }
-                    return new MultiStringValueType(VKRecord.parseWStringArray(data, 0x0, length));
+                    return new MultiStringValueType(VKRecord.parseWStringArray(data, 0x0, (int)length));
                 } else {
                     Cell c = new Cell(this._buf, offset);
                     ByteBuffer buf = c.getData();
-                    return new MultiStringValueType(VKRecord.parseWStringArray(buf, 0x0, length));
+                    return new MultiStringValueType(VKRecord.parseWStringArray(buf, 0x0, (int)length));
                 }
 
             case REG_BIG_ENDIAN: {

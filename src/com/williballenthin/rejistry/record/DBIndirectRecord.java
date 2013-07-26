@@ -17,7 +17,7 @@ public class DBIndirectRecord extends Record {
         int count = 0;
         while (length > 0) {
             int size = 0x3fd8;
-            int offset = this.getDword(OFFSET_LIST_OFFSET + (count * 4));
+            int offset = (int)this.getDword(OFFSET_LIST_OFFSET + (count * 4));
             offset += REGFHeader.FIRST_HBIN_OFFSET;
             Cell c = new Cell(this._buf, offset);
             ByteBuffer data = c.getData();

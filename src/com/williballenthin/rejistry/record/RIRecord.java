@@ -39,7 +39,7 @@ public class RIRecord extends SubkeyListRecord {
                     return false;
                 }
 
-                int offset = RIRecord.this.getDword(RIRecord.LIST_START_OFFSET + (this._index * RIRecord.LIST_ENTRY_SIZE));
+                int offset = (int)(RIRecord.this.getDword(RIRecord.LIST_START_OFFSET + (this._index * RIRecord.LIST_ENTRY_SIZE)));
                 int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
                 Cell c = new Cell(RIRecord.this._buf, parent_offset);
                 try {

@@ -19,7 +19,7 @@ public class DBRecord extends Record {
     }
 
     public ByteBuffer getData(int length) throws RegistryParseException {
-        int offset = this.getDword(INDIRECT_BLOCK_OFFSET_OFFSET);
+        int offset = (int)this.getDword(INDIRECT_BLOCK_OFFSET_OFFSET);
         offset += REGFHeader.FIRST_HBIN_OFFSET;
 
         Cell c = new Cell(this._buf, offset);

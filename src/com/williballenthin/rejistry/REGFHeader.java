@@ -29,7 +29,7 @@ public class REGFHeader extends BinaryBlock {
     public REGFHeader(ByteBuffer buf, int offset) throws RegistryParseException {
         super(buf, offset);
 
-        int magic = this.getDword(MAGIC_OFFSET);
+        long magic = this.getDword(MAGIC_OFFSET);
         if (magic != 0x66676572) {
             throw new RegistryParseException("Invalid magic header.");
         }
@@ -39,11 +39,11 @@ public class REGFHeader extends BinaryBlock {
         return this.getDword(SEQ1_OFFSET) == this.getDword(SEQ2_OFFSET);
     }
 
-    public int getMajorVersion() {
+    public long getMajorVersion() {
         return this.getDword(MAJOR_VERSION_OFFSET);
     }
 
-    public int getMinorVersion() {
+    public long getMinorVersion() {
         return this.getDword(MINOR_VERSION_OFFSET);
     }
 
@@ -52,7 +52,7 @@ public class REGFHeader extends BinaryBlock {
     }
 
     public int getLastHbinOffset() {
-        return this.getDword(LAST_HBIN_OFFSET_OFFSET);
+        return (int)this.getDword(LAST_HBIN_OFFSET_OFFSET);
     }
 
     /**
@@ -126,7 +126,7 @@ public class REGFHeader extends BinaryBlock {
      * @throws RegistryParseException if the creation of the NKRecord fails, or there are no HBINs in this Hive.
      */
     public NKRecord getRootNKRecord() throws RegistryParseException {
-        int first_cell_offset = this.getDword(FIRST_KEY_OFFSET_OFFSET);
+        int first_cell_offset = (int)(this.getDword(FIRST_KEY_OFFSET_OFFSET));
         try {
             Cell cell = this.getFirstHBIN().getCellAtOffset(first_cell_offset);
             return cell.getNKRecord();

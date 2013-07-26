@@ -30,7 +30,7 @@ public class ValueListRecord extends Record implements ValueList {
                     return false;
                 }
 
-                int offset = ValueListRecord.this.getDword(VALUE_LIST_OFFSET + (0x4 * _index));
+                int offset = (int)ValueListRecord.this.getDword(VALUE_LIST_OFFSET + (0x4 * _index));
                 offset += REGFHeader.FIRST_HBIN_OFFSET;
                 Cell c = new Cell(ValueListRecord.this._buf, offset);
                 try {

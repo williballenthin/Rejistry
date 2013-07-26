@@ -24,7 +24,8 @@ public class Cell extends BinaryBlock {
      * @return The length of this cell.
      */
     public int getLength() {
-        int length = this.getDword(LENGTH_OFFSET);
+        // this will cast down to a negative as required
+        int length = (int)this.getDword(LENGTH_OFFSET);
         if (length < 0x0) {
             return -length;
         } else {

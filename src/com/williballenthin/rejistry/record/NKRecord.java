@@ -42,7 +42,7 @@ public class NKRecord extends Record {
      * @return True if the NKRecord has a classname.
      */
     public boolean hasClassname() {
-        return this.getDword(CLASSNAME_OFFSET_OFFSET) != 0xFFFFFFFF;
+        return this.getDword(CLASSNAME_OFFSET_OFFSET) != 0xFFFFFFFFL;
     }
 
     /**
@@ -57,13 +57,12 @@ public class NKRecord extends Record {
             return "";
         }
 
-        int offset = this.getDword(CLASSNAME_OFFSET_OFFSET);
+        int offset = (int)this.getDword(CLASSNAME_OFFSET_OFFSET);
         int length = this.getWord(CLASSNAME_LENGTH_OFFSET);
         int classname_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
         Cell c = new Cell(this._buf, classname_offset);
         ByteBuffer b = c.getData();
         if (length > b.limit()) {
-            U.hex_out(length);
             throw new RegistryParseException("Cell size insufficient for parsing classname");
         }
 
@@ -121,7 +120,7 @@ public class NKRecord extends Record {
      * @throws RegistryParseException If the NKRecord cannot be parsed from the cell data.
      */
     public NKRecord getParentRecord() throws RegistryParseException {
-        int offset = this.getDword(PARENT_RECORD_OFFSET_OFFSET);
+        int offset = (int)this.getDword(PARENT_RECORD_OFFSET_OFFSET);
 
         int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
         Cell c = new Cell(this._buf, parent_offset);
@@ -133,7 +132,7 @@ public class NKRecord extends Record {
      * @return the number of values the key has.
      */
     public int getNumberOfValues() {
-        int num = this.getDword(VALUES_NUMBER_OFFSET);
+        int num = (int)this.getDword(VALUES_NUMBER_OFFSET);
         if (num == 0xFFFFFFFF) {
             return 0;
         } else {
@@ -146,7 +145,7 @@ public class NKRecord extends Record {
      * @return the number of subkeys the key has.
      */
     public int getSubkeyCount() {
-        int num = this.getDword(SUBKEY_NUMBER_OFFSET);
+        int num = (int)this.getDword(SUBKEY_NUMBER_OFFSET);
         if (num == 0xFFFFFFFF) {
             return 0;
         } else {
@@ -165,7 +164,7 @@ public class NKRecord extends Record {
             return new EmptySubkeyList();
         }
 
-        int subkeylist_offset = REGFHeader.FIRST_HBIN_OFFSET + this.getDword(SUBKEY_LIST_OFFSET_OFFSET);
+        int subkeylist_offset = (int)(REGFHeader.FIRST_HBIN_OFFSET + this.getDword(SUBKEY_LIST_OFFSET_OFFSET));
         Cell c = new Cell(this._buf, subkeylist_offset);
         return c.getSubkeyList();
     }
@@ -181,7 +180,7 @@ public class NKRecord extends Record {
             return new EmptyValueList();
         }
 
-        int offset = REGFHeader.FIRST_HBIN_OFFSET + this.getDword(VALUE_LIST_OFFSET_OFFSET);
+        int offset = (int)(REGFHeader.FIRST_HBIN_OFFSET + this.getDword(VALUE_LIST_OFFSET_OFFSET));
         Cell c = new Cell(this._buf, offset);
         return c.getValueListRecord(this.getNumberOfValues());
     }

@@ -30,7 +30,7 @@ public class DirectSubkeyListRecord extends SubkeyListRecord {
                 }
 
                 int rel_off = DirectSubkeyListRecord.this.LIST_START_OFFSET + (this._index * DirectSubkeyListRecord.this._item_size);
-                int offset = DirectSubkeyListRecord.this.getDword(rel_off);
+                int offset = (int)DirectSubkeyListRecord.this.getDword(rel_off);
                 int parent_offset = REGFHeader.FIRST_HBIN_OFFSET + offset;
                 Cell c = new Cell(DirectSubkeyListRecord.this._buf, parent_offset);
                 try {

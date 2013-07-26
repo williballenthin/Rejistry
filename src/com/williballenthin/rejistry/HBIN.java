@@ -41,7 +41,7 @@ public class HBIN extends BinaryBlock {
      * @return The relative offset to the next HBIN.
      */
     public int getRelativeOffsetNextHBIN() {
-        return this.getDword(NEXT_HBIN_OFFSET_OFFSET);
+        return (int)this.getDword(NEXT_HBIN_OFFSET_OFFSET);
     }
 
     /**
@@ -53,7 +53,7 @@ public class HBIN extends BinaryBlock {
      * @return The relative offset to the first HBIN in the hive.
      */
     public int getRelativeOffsetFirstHBIN() {
-        return this.getDword(FIRST_HBIN_OFFSET_OFFSET);
+        return (int)this.getDword(FIRST_HBIN_OFFSET_OFFSET);
     }
 
     /**
