@@ -59,6 +59,10 @@ public class Cell extends BinaryBlock {
         return this.getASCIIString(DATA_OFFSET, 0x2);
     }
 
+    public long getDataQword() {
+        return this.getQword(DATA_OFFSET);
+    }
+
     /**
      * getNKRecord interprets the data of this cell as an NKRecord and
      *   returns the parsed out structure.
@@ -140,5 +144,50 @@ public class Cell extends BinaryBlock {
         } else {
             throw new RegistryParseException("Unexpected subkey list type: " + magic);
         }
+    }
+
+    /**
+     * getDBRecord interprets the data of this cell as an DBRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The DBRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the DBRecord fails.
+     */
+    public DBRecord getDBRecord() throws RegistryParseException {
+        return new DBRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getDBIndirectRecord interprets the data of this cell as an DBIndirectRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The DBIndirectRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the DBIndirectRecord fails.
+     */
+    public DBIndirectRecord getDBIndirectRecord() throws RegistryParseException {
+        return new DBIndirectRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getVKRecord interprets the data of this cell as an VKRecord and
+     *   returns the parsed out structure.
+     *
+     * @return The VKRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the VKRecord fails.
+     */
+    public VKRecord getVKRecord() throws RegistryParseException {
+        return new VKRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET));
+    }
+
+    /**
+     * getValueListRecord interprets the data of this cell as a ValueListRecord and
+     *   returns the parsed out structure.
+     *
+     * @param numValues The number of values the value list should attempt to parse.
+     * @return The ValueListRecord found within this Cell.
+     * @throws RegistryParseException if the creation of the ValueListRecord fails.
+     */
+    public ValueListRecord getValueListRecord(int numValues) throws RegistryParseException {
+        return new ValueListRecord(this._buf, this.getAbsoluteOffset(DATA_OFFSET), numValues);
     }
 }

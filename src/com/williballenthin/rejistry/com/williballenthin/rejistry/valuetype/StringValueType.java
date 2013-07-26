@@ -4,8 +4,6 @@ public class StringValueType implements ValueType {
     private final String _s;
 
     public StringValueType(String s) {
-        super();
-
         this._s = s;
     }
 

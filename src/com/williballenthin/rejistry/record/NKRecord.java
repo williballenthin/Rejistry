@@ -17,6 +17,7 @@ public class NKRecord extends Record {
     private static final int SUBKEY_NUMBER_OFFSET = 0x14;
     private static final int SUBKEY_LIST_OFFSET_OFFSET = 0x1C;
     private static final int VALUES_NUMBER_OFFSET = 0x24;
+    private static final int VALUE_LIST_OFFSET_OFFSET = 0x28;
     private static final int CLASSNAME_OFFSET_OFFSET = 0x30;
     private static final int NAME_LENGTH_OFFSET = 0x48;
     private static final int CLASSNAME_LENGTH_OFFSET = 0x4A;
@@ -167,5 +168,21 @@ public class NKRecord extends Record {
         int subkeylist_offset = REGFHeader.FIRST_HBIN_OFFSET + this.getDword(SUBKEY_LIST_OFFSET_OFFSET);
         Cell c = new Cell(this._buf, subkeylist_offset);
         return c.getSubkeyList();
+    }
+
+    /**
+     * getValueList fetches the values of this key.
+     * @return the ValueList of the values of this key.
+     * @throws RegistryParseException if the value lists cannot be parsed
+     *   from the cell data.
+     */
+    public ValueList getValueList() throws RegistryParseException {
+        if (this.getNumberOfValues() == 0) {
+            return new EmptyValueList();
+        }
+
+        int offset = REGFHeader.FIRST_HBIN_OFFSET + this.getDword(VALUE_LIST_OFFSET_OFFSET);
+        Cell c = new Cell(this._buf, offset);
+        return c.getValueListRecord(this.getNumberOfValues());
     }
 }

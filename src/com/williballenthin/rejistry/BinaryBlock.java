@@ -31,7 +31,7 @@ public class BinaryBlock {
      *   but reads a lot better.
      *
      * @param offset The relative offset from which to parse the number.
-     * @return A non-negative 16bit number with the range 0-2**16-1;
+     * @return A non-negative 16bit number with the range 0-2**16-1.
      */
     protected int getWord(int offset) {
         //noinspection PointlessBitwiseExpression
@@ -40,15 +40,31 @@ public class BinaryBlock {
 
     /**
      * getDword parses a 32bit number from the specified relative offset with the range 0-2**32 - 1;
+     *   The integer is decoded as a little endian value.
      *   This method help self-document code. It is equivalent to the instance._buf.getInt(instance._offset + offset),
      *   but reads a lot better.
      *
      * @param offset The relative offset from which to parse the number.
-     * @return A non-negative 32bit number with the range 0-2**32-1;
+     * @return A non-negative 32bit number with the range 0-2**32-1.
      */
     protected int getDword(int offset) {
         //noinspection PointlessBitwiseExpression
         return this._buf.getInt(this._offset + offset) & 0xFFFFFFFF;
+    }
+
+    /**
+     * getDwordBE parses a 32bit number from the specified relative offset with the range 0-2**32 - 1;
+     *   The integer is decoded as a big endian value.
+     *   This is not thread safe.
+     *
+     * @param offset The relative offset from which to parse the number.
+     * @return A non-negative 32bit number with the range 0-2**32-1.
+     */
+    protected int getDwordBE(int offset) {
+        this._buf.order(ByteOrder.BIG_ENDIAN);
+        int d = this._buf.getInt(this._offset + offset) & 0xFFFFFFFF;
+        this._buf.order(ByteOrder.LITTLE_ENDIAN);
+        return d;
     }
 
     /**
@@ -69,6 +85,7 @@ public class BinaryBlock {
      * and interprets them as a UTF-16LE string.
      * This will return only the characters found before any NULL characters
      * (not NULL bytes).
+     * This is not thread safe.
      *
      * @param offset The relative offset into the buffer from which to read.
      * @param length The number of bytes to read.
@@ -98,6 +115,7 @@ public class BinaryBlock {
      * and interprets them as an ASCII string.
      * This will return only the characters found before any NULL characters
      * (not NULL bytes).
+     * This is not thread safe.
      *
      * @param offset The relative offset into the buffer from which to read.
      * @param length The number of bytes to read.
