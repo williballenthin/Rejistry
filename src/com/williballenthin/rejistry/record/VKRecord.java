@@ -105,6 +105,15 @@ public class VKRecord extends Record {
         }
     }
 
+    /**
+     * getValue parses and returns the data associated with this value.
+     * @return The data associated with this value.
+     * @throws RegistryParseException
+     * @throws UnsupportedEncodingException if the value type is a string type, and the string
+     *   data cannot be decoded.
+     * @throws NotImplementedException if the value type is one of: REG_LINK, REG_RESOURCE_LIST,
+     *   REG_FULL_RESOURCE_DESCRIPTOR, or REG_RESOURCE_REQUIREMENTS_LIST.
+     */
     public ValueType getValue() throws RegistryParseException, UnsupportedEncodingException, NotImplementedException {
         RegistryValueType t = this.getValueType();
         long length = this.getDataLength();

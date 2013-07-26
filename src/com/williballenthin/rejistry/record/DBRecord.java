@@ -18,6 +18,14 @@ public class DBRecord extends Record {
         }
     }
 
+    /**
+     * getData fetches `length` data from the blocks pointed to by this DBRecord.
+     * Note, there's no structural checking performed to ensure the direct blocks are
+     *   valid.
+     * @param length The number of bytes to attempt to parse from the direct blocks.
+     * @return The bytes parsed from the blocks.
+     * @throws java.nio.BufferOverflowException if too much data is requested.
+     */
     public ByteBuffer getData(int length) throws RegistryParseException {
         int offset = (int)this.getDword(INDIRECT_BLOCK_OFFSET_OFFSET);
         offset += REGFHeader.FIRST_HBIN_OFFSET;

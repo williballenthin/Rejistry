@@ -56,10 +56,22 @@ public class Cell extends BinaryBlock {
         return data;
     }
 
+    /**
+     * getDataSignature fetches the first two bytes of the data of this cell
+     *   and interprets it as the ASCII magic header of a sub-structure.
+     * @return The two character string that identifies the substructure of this cell.
+     * @throws UnsupportedEncodingException if the magic header does not decode
+     *   as an ASCII string.
+     */
     public String getDataSignature() throws UnsupportedEncodingException {
         return this.getASCIIString(DATA_OFFSET, 0x2);
     }
 
+    /**
+     * getDataQword fetches the first eight bytes of the data of this cell
+     *   and interprets it as a little endian QWORD.
+     * @return The first eight bytes of this cell interpreted as a little endian QWORD.
+     */
     public long getDataQword() {
         return this.getQword(DATA_OFFSET);
     }

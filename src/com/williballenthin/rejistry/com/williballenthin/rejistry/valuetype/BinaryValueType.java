@@ -2,6 +2,9 @@ package com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Used for Registry value types REG_NONE and REG_BIN.
+ */
 public class BinaryValueType implements ValueType {
     private ByteBuffer _b;
 

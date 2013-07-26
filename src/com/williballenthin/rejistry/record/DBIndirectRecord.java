@@ -12,6 +12,14 @@ public class DBIndirectRecord extends Record {
         super(buf, offset);
     }
 
+    /**
+     * getData fetches `length` data from the blocks pointed to by this indirect block.
+     * Note, there's no structural checking performed to ensure the direct blocks are
+     *   valid.
+     * @param length The number of bytes to attempt to parse from the direct blocks.
+     * @return The bytes parsed from the blocks.
+     * @throws java.nio.BufferOverflowException if too much data is requested.
+     */
     public ByteBuffer getData(int length) {
         ByteBuffer b = ByteBuffer.allocate(length);
         int count = 0;

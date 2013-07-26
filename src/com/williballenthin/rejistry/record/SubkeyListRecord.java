@@ -20,8 +20,19 @@ public abstract class SubkeyListRecord extends Record implements SubkeyList {
         return this.getWord(LIST_LENGTH_OFFSET);
     }
 
+    /**
+     * getSubkeys fetches an iterator over the of subkeys of this list.
+     * @return An iterator over the subkeys of this list.
+     */
     public abstract Iterator<NKRecord> getSubkeys();
 
+    /**
+     * getSubkey fetches the subkey with name `name` from the list of subkeys.
+     * Matching is performed case-insensitively.
+     * @param name The name of the subkey to fetch.
+     * @return The subkey with name `name` from the list of subkeys.
+     * @throws NoSuchElementException if a key with name `name` does not exist in this list.
+     */
     public NKRecord getSubkey(String name) throws NoSuchElementException {
         Iterator<NKRecord> it = this.getSubkeys();
         while (it.hasNext()) {

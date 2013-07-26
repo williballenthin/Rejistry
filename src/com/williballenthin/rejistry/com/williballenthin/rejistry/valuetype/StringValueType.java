@@ -1,5 +1,8 @@
 package com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype;
 
+/**
+ * Used for Registry value types REG_SZ and REG_EXPAND_SZ.
+ */
 public class StringValueType implements ValueType {
     private final String _s;
 

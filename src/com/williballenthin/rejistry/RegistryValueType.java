@@ -19,6 +19,10 @@ public enum RegistryValueType {
         this._value = value;
     }
 
+    /**
+     * getValue fetches the integer value for the type.
+     * @return The integer value associated with type type.
+     */
     public int getValue() {
         return  this._value;
     }
@@ -56,6 +60,11 @@ public enum RegistryValueType {
         }
     }
 
+    /**
+     * valueOf fetches the enum value given an integer.
+     * @param v The Registry value type as a integer.
+     * @return The Registry value type associated with the given integer.
+     */
     public static RegistryValueType valueOf(int v) {
         // I don't like how we have to repeat the constants here, but I'm a Java n00b.
         switch(v) {

@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Used for Registry value type REG_MULTI_SZ.
+ */
 public class MultiStringValueType implements ValueType {
     private static List<String> _l;
 
