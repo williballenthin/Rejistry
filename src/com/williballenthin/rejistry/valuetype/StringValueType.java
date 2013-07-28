@@ -1,4 +1,4 @@
-package com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype;
+package com.williballenthin.rejistry.valuetype;
 
 /**
  * Used for Registry value types REG_SZ and REG_EXPAND_SZ.

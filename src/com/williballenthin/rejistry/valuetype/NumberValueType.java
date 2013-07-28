@@ -1,4 +1,4 @@
-package com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype;
+package com.williballenthin.rejistry.valuetype;
 
 /**
  * Used for Registry value types REG_DWORD, REG_QWORD, REG_BIG_ENDIAN.

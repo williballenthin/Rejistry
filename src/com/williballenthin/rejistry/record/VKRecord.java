@@ -1,7 +1,7 @@
 package com.williballenthin.rejistry.record;
 
 import com.williballenthin.rejistry.*;
-import com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype.*;
+import com.williballenthin.rejistry.valuetype.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.UnsupportedEncodingException;

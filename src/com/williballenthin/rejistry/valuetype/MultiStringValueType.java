@@ -1,4 +1,4 @@
-package com.williballenthin.rejistry.com.williballenthin.rejistry.valuetype;
+package com.williballenthin.rejistry.valuetype;
 
 import java.util.Iterator;
 import java.util.LinkedList;
