@@ -17,9 +17,8 @@ public class RegistryHiveFile implements RegistryHive {
         this._buf.order(ByteOrder.LITTLE_ENDIAN);
     }
 
-    public RegistryKey getRoot() {
-        // TODO(wb): this.
-        throw new UnsupportedOperationException();
+    public RegistryKey getRoot() throws RegistryParseException {
+        return new RegistryKey(this.getHeader().getRootNKRecord());
     }
 
     public ByteBuffer getBuf() {

@@ -8,7 +8,7 @@ public interface RegistryHive {
      *
      * @return The root of the hive.
      */
-    public RegistryKey getRoot();
+    public RegistryKey getRoot() throws RegistryParseException;
 
     /**
      * getBuf fetches a view of the ByteBuffer that backs the hive.

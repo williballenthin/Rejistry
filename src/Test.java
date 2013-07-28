@@ -1,9 +1,13 @@
 import com.williballenthin.rejistry.*;
+import com.williballenthin.rejistry.record.NKRecord;
+import com.williballenthin.rejistry.record.VKRecord;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.SimpleTimeZone;
@@ -30,6 +34,19 @@ public class Test {
         return isoformat.format(c.getTime());
     }
 
+    private static void printVKRecord(VKRecord record, String prefix) throws RegistryParseException, UnsupportedEncodingException {
+        System.out.println(prefix + "vkrecord has name: " + getBooleanString(record.hasName()));
+        System.out.println(prefix + "vkrecord has ascii name: " + getBooleanString(record.hasAsciiName()));
+        System.out.println(prefix + "vkrecord name: " + record.getName());
+        System.out.println(prefix + "vkrecord value type: " + record.getValueType().toString());
+        System.out.println(prefix + "vkrecord data length: " + record.getDataLength());
+        String data = record.getValue().toString();
+        char[] padding = new char["vkrecord data: ".length()];
+        Arrays.fill(padding, ' ');
+        data = data.replace("\n", "\n" + prefix + new String(padding));
+        System.out.println(prefix + "vkrecord data: " + data);
+    }
+
     private static void printNKRecord(NKRecord record, String prefix) throws IOException, RegistryParseException {
         System.out.println(prefix + "nkrecord has classname: " + getBooleanString(record.hasClassname()));
         System.out.println(prefix + "nkrecord classname: " + record.getClassname());
@@ -39,6 +56,12 @@ public class Test {
         System.out.println(prefix + "nkrecord has parent: " + getBooleanString(record.hasParentRecord()));
         System.out.println(prefix + "nkrecord number of values: " + record.getNumberOfValues());
         System.out.println(prefix + "nkrecord number of subkeys: " + record.getSubkeyCount());
+        Iterator<VKRecord> vkit = record.getValueList().getValues();
+        while (vkit.hasNext()) {
+            VKRecord r = vkit.next();
+            System.out.println(prefix + "  value: " + r.getName());
+            printVKRecord(r, "    " + prefix);
+        }
     }
 
     private static void recurseNKRecord(NKRecord record, String prefix) throws IOException, RegistryParseException {
@@ -47,7 +70,7 @@ public class Test {
         Iterator<NKRecord> nkit = record.getSubkeyList().getSubkeys();
         while (nkit.hasNext()) {
             NKRecord r = nkit.next();
-            System.out.println("  " + prefix + r.getName());
+            System.out.println(prefix + "  key: " + r.getName());
             recurseNKRecord(r, "    " + prefix);
         }
     }
@@ -93,7 +116,7 @@ public class Test {
 
             i++;
 
-            //break; // TODO(wb): removeme
+            break; // TODO(wb): removeme
         }
         printNKRecord(reg.getHeader().getRootNKRecord(), "root ");
 
