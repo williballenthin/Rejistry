@@ -3,7 +3,9 @@ import argparse
 from Registry import Registry
 
 def hexdump(src, length=16):
-    FILTER = ''.join([((len(repr(chr(x))) == 3) or x == "\\") and chr(x) or '.' for x in range(256)])
+    if len(src) == 0:
+        return "0x%08X                                                 " % 0
+    FILTER = ''.join([((len(repr(chr(x))) == 3) or chr(x) == "\\") and chr(x) or '.' for x in range(256)])
     lines = []
     for c in xrange(0, len(src), length):
         chars = src[c:c+length]
@@ -25,16 +27,20 @@ def printVKRecord(record, prefix):
     print prefix + "vkrecord value type: %s" % fix_type(record.data_type_str())
     print prefix + "vkrecord data length: %s" % record.data_length()
     if record.data_type() == Registry.RegSZ or record.data_type() == Registry.RegExpandSZ:
-        print prefix + "vkrecord data: %s" % record.data()
+        print prefix + "vkrecord data: %s" % record.data().encode("utf-8")
     elif record.data_type() == Registry.RegBin or record.data_type() == Registry.RegNone:
         print prefix + "vkrecord data: "
-        print ("\n" + hexdump(record.data())).replace("\n", "\n" + prefix + (" " * len("vkrecord data: ")))
+        padding = prefix + (" " * len("vkrecord data: "))
+        print padding + hexdump(record.data()).replace("\n", "\n" + padding)
     elif record.data_type() == Registry.RegDWord or record.data_type() == Registry.RegQWord or record.data_type == Registry.RegBigEndian:
         print prefix + "vkrecord data: " + hex(record.data())
     elif record.data_type() == Registry.RegMultiSZ:
-        print prefix + "vkrecord data: "
-        for s in record.data():
-            print prefix + (" " * len("vkrecord data: ")) + s
+        if len(record.data()) == 0:
+            print prefix + "vkrecord data: "
+        else:
+            print prefix + "vkrecord data: " + record.data()[0]
+            for s in record.data()[1:]:
+                print prefix + (" " * len("vkrecord data: ")) + s
     else:
         print prefix + "vkrecord data: unsupported"
 
