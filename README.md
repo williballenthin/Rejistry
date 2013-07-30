@@ -16,3 +16,9 @@ Dependencies
 TODO
 ----
   - Make exceptions more specific
+  - Parse information, including the SKRecord structure
+  - Parse out the raw binary of the remaining value types:
+     - REG_LINK
+     - REG_RESOURCE_LIST
+     - REG_FULL_RESOURCE_DESCRIPTOR
+     - REG_RESOURCE_REQUIREMENTS_LIST
