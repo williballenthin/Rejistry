@@ -39,7 +39,7 @@ public class Cell extends BinaryBlock {
      * @return True if the cell is in use.
      */
     public boolean isActive() {
-        return this.getDword(LENGTH_OFFSET) < 0x0;
+        return (int)this.getDword(LENGTH_OFFSET) < 0x0;
     }
 
     /**

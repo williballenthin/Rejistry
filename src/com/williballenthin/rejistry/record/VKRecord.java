@@ -114,7 +114,7 @@ public class VKRecord extends Record {
      * @throws NotImplementedException if the value type is one of: REG_LINK, REG_RESOURCE_LIST,
      *   REG_FULL_RESOURCE_DESCRIPTOR, or REG_RESOURCE_REQUIREMENTS_LIST.
      */
-    public ValueType getValue() throws RegistryParseException, UnsupportedEncodingException, NotImplementedException {
+    public ValueType getValue() throws RegistryParseException, UnsupportedEncodingException {
         RegistryValueType t = this.getValueType();
         long length = this.getDataLength();
         int offset = (int)this.getDataOffset();
@@ -129,11 +129,11 @@ public class VKRecord extends Record {
                 ByteBuffer data;
                 if (length >= LARGE_DATA_SIZE) {
                     int bufSize = (int)(length - LARGE_DATA_SIZE);
-                    data = ByteBuffer.allocate(bufSize + 1);
+                    data = ByteBuffer.allocate(bufSize);
                     data.position(0x0);
-                    data.limit(bufSize + 1);
+                    data.limit(bufSize);
                     for (int i = 0; i < bufSize; i++) {
-                        data.putChar(i, this.getChar(i));
+                        data.put(this.getByte(DATA_OFFSET_OFFSET + i));
                     }
                 } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
                     Cell c = new Cell(this._buf, offset);
@@ -147,6 +147,7 @@ public class VKRecord extends Record {
                 } else {
                     Cell c = new Cell(this._buf, offset);
                     data = c.getData();
+                    data.limit((int)length);
                 }
                 return new BinaryValueType(data);
             }
@@ -169,6 +170,7 @@ public class VKRecord extends Record {
                 } else {
                     Cell c = new Cell(this._buf, offset);
                     ByteBuffer buf = c.getData();
+                    buf.limit((int)length);
                     return new StringValueType(VKRecord.parseWString(buf, 0x0, (int)length));
                 }
 
@@ -197,6 +199,7 @@ public class VKRecord extends Record {
                 } else {
                     Cell c = new Cell(this._buf, offset);
                     ByteBuffer buf = c.getData();
+                    buf.limit((int)length);
                     return new MultiStringValueType(VKRecord.parseWStringArray(buf, 0x0, (int)length));
                 }
 

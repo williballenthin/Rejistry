@@ -12,6 +12,6 @@ public class NumberValueType implements ValueType {
 
     @Override
     public String toString() {
-        return String.format("%x", this._n);
+        return String.format("0x%x", this._n);
     }
 }

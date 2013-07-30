@@ -26,15 +26,15 @@ public class BinaryBlock {
     }
 
     /**
-     * getChar parses a 8bit char from the specified relative offset.
-     *   This method help self-document code. It is equivalent to the instance._buf.getChar(instance._offset + offset),
+     * getChar parses a 8bit byte from the specified relative offset.
+     *   This method help self-document code. It is equivalent to the instance._buf.get(instance._offset + offset),
      *   but reads a lot better.
      *
      * @param offset The relative offset from which to parse the number.
-     * @return The char read from the specified offset.
+     * @return The byte read from the specified offset.
      */
-    protected char getChar(int offset) {
-        return this._buf.getChar(this._offset + offset);
+    protected byte getByte(int offset) {
+        return this._buf.get(this._offset + offset);
     }
 
     /**

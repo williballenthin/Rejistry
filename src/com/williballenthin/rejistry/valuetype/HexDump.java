@@ -28,7 +28,7 @@ class HexDump
 
                 for (int j = 0 ; j < 16 ; j++)
                 {
-                    if (line[j] > ' ' && line[j] < '~')
+                    if (line[j] >= ' ' && line[j] <= '~')
                     {
                         result.append(new String(line, j, 1));
                     }
@@ -49,6 +49,23 @@ class HexDump
             result.append(HEX_DIGITS[b & 0x0F]);
 
             line[lineIndex++] = b;
+
+            if (lineIndex == 16 && i == offset + length - 1)
+            {
+                result.append(" ");
+
+                for (int j = 0 ; j < 16 ; j++)
+                {
+                    if (line[j] >= ' ' && line[j] <= '~')
+                    {
+                        result.append(new String(line, j, 1));
+                    }
+                    else
+                    {
+                        result.append(".");
+                    }
+                }
+            }
         }
 
         if (lineIndex != 16)
@@ -62,7 +79,7 @@ class HexDump
 
             for (int i = 0 ; i < lineIndex ; i++)
             {
-                if (line[i] > ' ' && line[i] < '~')
+                if (line[i] >= ' ' && line[i] <= '~')
                 {
                     result.append(new String(line, i, 1));
                 }

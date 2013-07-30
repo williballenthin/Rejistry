@@ -3,27 +3,33 @@ import argparse
 from Registry import Registry
 
 def hexdump(src, length=16):
-    FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
+    FILTER = ''.join([((len(repr(chr(x))) == 3) or x == "\\") and chr(x) or '.' for x in range(256)])
     lines = []
     for c in xrange(0, len(src), length):
         chars = src[c:c+length]
-        hex = ' '.join(["%02x" % ord(x) for x in chars])
+        hex = ' '.join(["%02X" % ord(x) for x in chars])
         printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
-        lines.append("%04x  %-*s  %s\n" % (c, length*3, hex, printable))
+        lines.append("0x%08X %-*s%s\n" % (c, length*3, hex, printable))
     return ''.join(lines)
 
+
+def fix_type(s):
+    map = {"RegSZ": "REG_SZ", "RegExpandSZ": "REG_EXPAND_SZ", "RegBin": "REG_BIN", "RegNone": "REG_NONE", 
+           "RegDWord": "REG_DWORD", "RegQWord": "REG_QWORD", "RegBigEndian": "REG_BIG_ENDIAN", "RegMultiSZ": "REG_MULTI_SZ"}
+    return map.get(s, s)
 
 def printVKRecord(record, prefix):
     print prefix + "vkrecord has name: %s" % record.has_name()
     print prefix + "vkrecord has ascii name: %s" % record.has_ascii_name()
     print prefix + "vkrecord name: %s" % record.name()
-    print prefix + "vkrecord value type: %s" % record.data_type_str()
+    print prefix + "vkrecord value type: %s" % fix_type(record.data_type_str())
     print prefix + "vkrecord data length: %s" % record.data_length()
     if record.data_type() == Registry.RegSZ or record.data_type() == Registry.RegExpandSZ:
-        print prefix + "vkrecord data:  %s" % record.data()
+        print prefix + "vkrecord data: %s" % record.data()
     elif record.data_type() == Registry.RegBin or record.data_type() == Registry.RegNone:
-        print prefix + "vkrecord data: " + hexdump(record.data()).replace("\n", "\n" + prefix + (" " * len("vkrecord data: ")))
-    elif record.data_type() == Registry.RegDWord or record.data_type() == Registry.RegQWord or record.data_type == Registry.BigEndian:
+        print prefix + "vkrecord data: "
+        print ("\n" + hexdump(record.data())).replace("\n", "\n" + prefix + (" " * len("vkrecord data: ")))
+    elif record.data_type() == Registry.RegDWord or record.data_type() == Registry.RegQWord or record.data_type == Registry.RegBigEndian:
         print prefix + "vkrecord data: " + hex(record.data())
     elif record.data_type() == Registry.RegMultiSZ:
         print prefix + "vkrecord data: "
@@ -54,7 +60,7 @@ def recurseNKRecord(record, prefix):
     if record.subkey_number() == 0:
         return
     for r in record.subkey_list().keys():
-        print "  " + prefix + r.name()
+        print prefix + "  key: " + r.name()
         recurseNKRecord(r, "    " + prefix)
 
 
