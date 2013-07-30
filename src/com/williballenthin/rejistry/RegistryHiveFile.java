@@ -17,14 +17,12 @@ public class RegistryHiveFile implements RegistryHive {
         this._buf.order(ByteOrder.LITTLE_ENDIAN);
     }
 
+    @Override
     public RegistryKey getRoot() throws RegistryParseException {
         return new RegistryKey(this.getHeader().getRootNKRecord());
     }
 
-    public ByteBuffer getBuf() {
-        return this._buf.asReadOnlyBuffer();
-    }
-
+    @Override
     public REGFHeader getHeader() throws RegistryParseException {
         return new REGFHeader(this._buf, 0x0);
     }
