@@ -115,8 +115,6 @@ public class Test {
             }
 
             i++;
-
-            break; // TODO(wb): removeme
         }
         printNKRecord(reg.getHeader().getRootNKRecord(), "root ");
 

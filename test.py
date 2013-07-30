@@ -94,7 +94,6 @@ def main():
             else:
                 print "hbin %d, cell %d, is allocated: yes" % (i, j)
             print "hbin %d, cell %d, length: %s" % (i, j, cell.size())
-        break
     printNKRecord(reg._regf.first_key(), "root ")
     for record in reg._regf.first_key().subkey_list().keys():
         print "  " + record.name()
