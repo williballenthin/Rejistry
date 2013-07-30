@@ -2,7 +2,6 @@ package com.williballenthin.rejistry.record;
 
 import com.williballenthin.rejistry.*;
 import com.williballenthin.rejistry.valuetype.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -215,7 +214,7 @@ public class VKRecord extends Record {
                 if (length < 0x5 || length > LARGE_DATA_SIZE) {
                     return new NumberValueType(this.getDword(DATA_OFFSET_OFFSET));
                 } else {
-                    throw new RegistryParseException("Unsupported Registry value type: " + t.toString());
+                    throw new NotImplementedException();
                 }
             }
         }
