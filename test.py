@@ -3,6 +3,9 @@ import argparse
 from Registry import Registry
 
 def hexdump(src, length=16):
+    """
+    no trailing newline
+    """
     if len(src) == 0:
         return "0x%08X                                                 " % 0
     FILTER = ''.join([((len(repr(chr(x))) == 3) or chr(x) == "\\") and chr(x) or '.' for x in range(256)])
@@ -12,7 +15,7 @@ def hexdump(src, length=16):
         hex = ' '.join(["%02X" % ord(x) for x in chars])
         printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
         lines.append("0x%08X %-*s%s\n" % (c, length*3, hex, printable))
-    return ''.join(lines)
+    return ''.join(lines)[:-1]
 
 
 def fix_type(s):

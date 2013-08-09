@@ -5,6 +5,7 @@ import com.williballenthin.rejistry.valuetype.*;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.InvalidParameterException;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,12 +109,8 @@ public class VKRecord extends Record {
      * getValue parses and returns the data associated with this value.
      * @return The data associated with this value.
      * @throws RegistryParseException
-     * @throws UnsupportedEncodingException if the value type is a string type, and the string
-     *   data cannot be decoded.
-     * @throws NotImplementedException if the value type is one of: REG_LINK, REG_RESOURCE_LIST,
-     *   REG_FULL_RESOURCE_DESCRIPTOR, or REG_RESOURCE_REQUIREMENTS_LIST.
      */
-    public ValueType getValue() throws RegistryParseException, UnsupportedEncodingException {
+    public ValueData getValue() throws RegistryParseException, UnsupportedEncodingException {
         RegistryValueType t = this.getValueType();
         long length = this.getDataLength();
         int offset = (int)this.getDataOffset();
@@ -123,8 +120,15 @@ public class VKRecord extends Record {
         }
 
         switch(t) {
-            case REG_BIN:  // intentional fallthrough
-            case REG_NONE: {
+            case REG_BIN: // intentional fallthrough
+            case REG_NONE: // intentional fallthrough
+            case REG_SZ: // intentional fallthrough
+            case REG_EXPAND_SZ: // intentional fallthrough
+            case REG_MULTI_SZ: // intentional fallthrough
+            case REG_LINK:  // intentional fallthrough
+            case REG_RESOURCE_LIST:  // intentional fallthrough
+            case REG_FULL_RESOURCE_DESCRIPTOR:  // intentional fallthrough
+            case REG_RESOURCE_REQUIREMENTS_LIST: {
                 ByteBuffer data;
                 if (length >= LARGE_DATA_SIZE) {
                     int bufSize = (int)(length - LARGE_DATA_SIZE);
@@ -148,141 +152,41 @@ public class VKRecord extends Record {
                     data = c.getData();
                     data.limit((int)length);
                 }
-                return new BinaryValueType(data);
+                data.position(0x0);
+                return new ValueData(data, t);
             }
-
-            case REG_SZ:  // intentional fallthrough
-            case REG_EXPAND_SZ:
-                if (length >= LARGE_DATA_SIZE) {
-                    return new StringValueType(this.parseWString(this._buf, offset, (int)(length - LARGE_DATA_SIZE)));
-                } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
-                    Cell c = new Cell(this._buf, offset);
-                    ByteBuffer data;
-                    try {
-                        DBRecord db = c.getDBRecord();
-                        data = db.getData((int)length);
-                    } catch (RegistryParseException e) {
-                        data = c.getData();
-                        data.limit((int)length);
-                    }
-                    return new StringValueType(VKRecord.parseWString(data, 0x0, (int)length));
-                } else {
-                    Cell c = new Cell(this._buf, offset);
-                    ByteBuffer buf = c.getData();
-                    buf.limit((int)length);
-                    return new StringValueType(VKRecord.parseWString(buf, 0x0, (int)length));
-                }
 
             case REG_DWORD:
-                return new NumberValueType(this.getDword(DATA_OFFSET_OFFSET));
+            case REG_BIG_ENDIAN: {
+                ByteBuffer data;
+                int bufSize = 0x4;
+                data = ByteBuffer.allocate(bufSize);
+                data.order(ByteOrder.LITTLE_ENDIAN);
+                data.position(0x0);
+                data.limit(bufSize);
+                for (int i = 0; i < bufSize; i++) {
+                    data.put(this.getByte(DATA_OFFSET_OFFSET + i));
+                }
+                data.position(0x0);
+                return new ValueData(data, t);
+            }
 
             case REG_QWORD: {
+                ByteBuffer data;
+                int bufSize = 0x8;
                 Cell c = new Cell(this._buf, offset);
-                return new NumberValueType(c.getDataQword());
+                data = c.getData();
+                data.order(ByteOrder.LITTLE_ENDIAN);
+                data.limit(0x8);
+                data.position(0x0);
+                return new ValueData(data, t);
             }
 
-            case REG_MULTI_SZ:
-                if (length >= LARGE_DATA_SIZE) {
-                    return new MultiStringValueType();
-                } else if (DB_DATA_SIZE < length && length < LARGE_DATA_SIZE) {
-                    Cell c = new Cell(this._buf, offset);
-                    ByteBuffer data;
-                    try {
-                        DBRecord db = c.getDBRecord();
-                        data = db.getData((int)length);
-                    } catch (RegistryParseException e) {
-                        data = c.getData();
-                        data.limit((int)length);
-                    }
-                    return new MultiStringValueType(VKRecord.parseWStringArray(data, 0x0, (int)length));
-                } else {
-                    Cell c = new Cell(this._buf, offset);
-                    ByteBuffer buf = c.getData();
-                    buf.limit((int)length);
-                    return new MultiStringValueType(VKRecord.parseWStringArray(buf, 0x0, (int)length));
-                }
-
-            case REG_BIG_ENDIAN: {
-                return new NumberValueType(this.getDwordBE(DATA_OFFSET_OFFSET));
-            }
-
-            case REG_LINK:  // intentional fallthrough
-            case REG_RESOURCE_LIST:  // intentional fallthrough
-            case REG_FULL_RESOURCE_DESCRIPTOR:  // intentional fallthrough
-            case REG_RESOURCE_REQUIREMENTS_LIST:  // intentional fallthrough
             default: {
-                if (length < 0x5 || length > LARGE_DATA_SIZE) {
-                    return new NumberValueType(this.getDword(DATA_OFFSET_OFFSET));
-                } else {
-                    throw new NotImplementedException();
-                }
+                throw new NotImplementedException();
             }
         }
     }
 
-    /**
-     * parseWString fetches `length` bytes from `buf` at relative offset `offset`
-     * and interprets them as a UTF-16LE string.
-     * This will return only the characters found before any NULL characters
-     * (not NULL bytes).
-     *
-     * @param offset The relative offset into the buffer from which to read.
-     * @param length The number of bytes to read.
-     * @return A string decoded from UTF-16LE bytes.
-     * @throws UnsupportedEncodingException if the bytes cannot be decoded as an UTF-16LE string.
-     * TODO(wb): don't like the dubplication here.
-     */
-    public static String parseWString(ByteBuffer buf, int offset, int length) throws UnsupportedEncodingException {
-        int saved_position = buf.position();
-        byte[] sb = new byte[length];
 
-        buf.position(offset);
-        buf.get(sb, 0, length);
-        buf.position(saved_position);
-
-        String s = new String(sb, "UTF-16LE");
-
-        int eos = s.indexOf(0x0);
-        if (eos != -1) {
-            s = s.substring(0, eos);
-        }
-        return s;
-    }
-
-    /**
-     * parseWStringArray fetches `length` bytes from `buf` at relative offset `offset`
-     * and interprets them as a list of UTF-16LE strings separated by NULLs.
-     *
-     * @param offset The relative offset into the buffer from which to read.
-     * @param length The number of bytes to read.
-     * @return A list of strings decoded from UTF-16LE bytes separated by NULL characters.
-     * @throws UnsupportedEncodingException if the bytes cannot be decoded as UTF-16LE strings.
-     */
-    public static List<String> parseWStringArray(ByteBuffer buf, int offset, int length) throws UnsupportedEncodingException {
-        int saved_position = buf.position();
-        byte[] sb = new byte[length];
-
-        buf.position(offset);
-        buf.get(sb, 0, length);
-        buf.position(saved_position);
-
-        String stringBuffer = new String(sb, "UTF-16LE");
-
-        List<String> ret = new LinkedList<String>();
-        int index = 0;
-
-        while (index < stringBuffer.length()) {
-            int eos = stringBuffer.indexOf(0x0, index);
-            if (eos != -1) {
-                String s = stringBuffer.substring(index, eos);
-                ret.add(s);
-                index += s.length() + 1;
-            } else {
-                ret.add(stringBuffer.substring(index));
-                break;
-            }
-        }
-
-        return ret;
-    }
 }

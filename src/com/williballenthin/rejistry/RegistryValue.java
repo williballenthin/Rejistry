@@ -20,7 +20,7 @@ public class RegistryValue {
         return this._vk.getValueType();
     }
 
-    public ValueType getValue() throws UnsupportedEncodingException, RegistryParseException {
+    public ValueData getValue() throws UnsupportedEncodingException, RegistryParseException {
         return this._vk.getValue();
     }
 }

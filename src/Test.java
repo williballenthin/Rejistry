@@ -1,6 +1,7 @@
 import com.williballenthin.rejistry.*;
 import com.williballenthin.rejistry.record.NKRecord;
 import com.williballenthin.rejistry.record.VKRecord;
+import com.williballenthin.rejistry.valuetype.HexDump;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,11 +41,44 @@ public class Test {
         System.out.println(prefix + "vkrecord name: " + record.getName());
         System.out.println(prefix + "vkrecord value type: " + record.getValueType().toString());
         System.out.println(prefix + "vkrecord data length: " + record.getDataLength());
-        String data = record.getValue().toString();
+
+        ValueData data = record.getValue();
         char[] padding = new char["vkrecord data: ".length()];
         Arrays.fill(padding, ' ');
-        data = data.replace("\n", "\n" + prefix + new String(padding));
-        System.out.println(prefix + "vkrecord data: " + data);
+        switch(data.getValueType()) {
+            case REG_SZ:
+            case REG_EXPAND_SZ:
+                System.out.println(prefix + "vkrecord data: " + data.getAsString());
+                break;
+
+            case REG_MULTI_SZ: {
+                StringBuilder sb = new StringBuilder();
+                Iterator<String> it = data.getAsStringList().iterator();
+                if (it.hasNext()) {
+                    String s = it.next();
+                    sb.append(s);
+                }
+                while (it.hasNext()) {
+                    sb.append("\n" + prefix + new String(padding));
+                    String s = it.next();
+                    sb.append(s);
+                }
+                System.out.println(prefix + "vkrecord data: " + sb.toString());
+                break;
+            }
+
+            case REG_DWORD:
+            case REG_QWORD:
+            case REG_BIG_ENDIAN:
+                System.out.println(prefix + "vkrecord data: " + String.format("0x%x", data.getAsNumber()));
+                break;
+
+            default: {
+                String s = HexDump.dumpHexString(data.getAsRawData());
+                s = s.replace("\n", "\n" + prefix + new String(padding));
+                System.out.println(prefix + "vkrecord data: " + s);
+            }
+        }
     }
 
     private static void printNKRecord(NKRecord record, String prefix) throws IOException, RegistryParseException {

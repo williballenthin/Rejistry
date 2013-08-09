@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  *   which is Apache 2.0.
  * @scope package-protected
  */
-class HexDump
+public class HexDump
 {
     public static String dumpHexString(byte[] array, int offset, int length)
     {
