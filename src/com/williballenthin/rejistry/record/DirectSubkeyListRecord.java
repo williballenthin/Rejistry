@@ -53,7 +53,6 @@ public class DirectSubkeyListRecord extends SubkeyListRecord {
 
             @Override
             public void remove() {
-                // TODO(wb): implement me
                 throw new UnsupportedOperationException("Remove operation not supported for subkey lists");
             }
         };

@@ -37,7 +37,7 @@ public class ValueData {
      * @param length The number of bytes to read.
      * @return A string decoded from UTF-16LE bytes.
      * @throws UnsupportedEncodingException if the bytes cannot be decoded as an UTF-16LE string.
-     * TODO(wb): don't like the dubplication here.
+     * TODO(wb): don't like the duplication here.
      */
     public static String parseWString(ByteBuffer buf, int offset, int length) throws UnsupportedEncodingException {
         int saved_position = buf.position();

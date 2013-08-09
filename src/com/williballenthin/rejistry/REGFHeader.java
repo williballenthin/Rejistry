@@ -22,8 +22,6 @@ public class REGFHeader extends BinaryBlock {
     public static final int FIRST_HBIN_OFFSET = 0x1000;
 
     /**
-     * @param buf
-     * @param offset
      * @throws RegistryParseException if the magic header is not the ASCII string "REGF".
      */
     public REGFHeader(ByteBuffer buf, int offset) throws RegistryParseException {

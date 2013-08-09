@@ -61,7 +61,6 @@ public class RIRecord extends SubkeyListRecord {
 
             @Override
             public void remove() {
-                // TODO(wb): implement me
                 throw new UnsupportedOperationException("Remove not supported for subkey list lists");
             }
         };
@@ -156,7 +155,6 @@ public class RIRecord extends SubkeyListRecord {
 
             @Override
             public void remove() {
-                // TODO(wb): implement me
                 throw new UnsupportedOperationException("Remove not supported for subkey lists");
             }
         };
