@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
  * Utility class for creating ASCII hex dumps from binary data.
  * From: https://code.google.com/p/google-tv-pairing-protocol/source/browse/src/com/google/polo/pairing/HexDump.java?r=9dcabe2bcb08f554210f43e109f48b8e6ede2505
  *   which is Apache 2.0.
- * @scope package-protected
  */
 public class HexDump
 {

@@ -6,8 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.InvalidParameterException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class VKRecord extends Record {
     public static final String MAGIC = "vk";
