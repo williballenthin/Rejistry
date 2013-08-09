@@ -1,6 +1,5 @@
 package com.williballenthin.rejistry;
 
-import com.williballenthin.rejistry.valuetype.ValueType;
 import com.williballenthin.rejistry.record.VKRecord;
 
 import java.io.UnsupportedEncodingException;

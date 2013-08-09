@@ -1,7 +1,6 @@
 package com.williballenthin.rejistry.record;
 
 import com.williballenthin.rejistry.*;
-import com.williballenthin.rejistry.valuetype.*;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;

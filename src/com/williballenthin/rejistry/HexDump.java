@@ -1,4 +1,4 @@
-package com.williballenthin.rejistry.valuetype;
+package com.williballenthin.rejistry;
 
 import java.nio.ByteBuffer;
 

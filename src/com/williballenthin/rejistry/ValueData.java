@@ -1,7 +1,5 @@
 package com.williballenthin.rejistry;
 
-import com.williballenthin.rejistry.valuetype.HexDump;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

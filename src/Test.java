@@ -1,7 +1,7 @@
 import com.williballenthin.rejistry.*;
 import com.williballenthin.rejistry.record.NKRecord;
 import com.williballenthin.rejistry.record.VKRecord;
-import com.williballenthin.rejistry.valuetype.HexDump;
+import com.williballenthin.rejistry.HexDump;
 
 import java.io.File;
 import java.io.IOException;
