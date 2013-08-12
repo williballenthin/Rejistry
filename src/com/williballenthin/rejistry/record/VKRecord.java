@@ -80,9 +80,23 @@ public class VKRecord extends Record {
 
     /**
      * getDataLength fetches the length of the value data.
+     *   This is the actual length of the data that should be parsed for the value.
      * @return The length of the value data.
      */
     public long getDataLength() {
+        long size = this.getDword(DATA_LENGTH_OFFSET);
+        if (size > LARGE_DATA_SIZE) {
+            size -= LARGE_DATA_SIZE;
+        }
+        return size;
+    }
+
+    /**
+     * getRawDataLength fetches the literal value that describes the value data length.
+     *   Some interpretation may be required to make this value reasonable.
+     * @return The literal value that describes the value data length.
+     */
+    public long getRawDataLength() {
         return this.getDword(DATA_LENGTH_OFFSET);
     }
 
@@ -91,7 +105,7 @@ public class VKRecord extends Record {
      * @return The absolute offset to the value data.
      */
     public long getDataOffset() {
-        if (this.getDataLength() < SMALL_DATA_SIZE || this.getDataLength() >= LARGE_DATA_SIZE) {
+        if (this.getRawDataLength() < SMALL_DATA_SIZE || this.getRawDataLength() >= LARGE_DATA_SIZE) {
             return this._offset + DATA_OFFSET_OFFSET;
         } else {
             return REGFHeader.FIRST_HBIN_OFFSET + this.getDword(DATA_OFFSET_OFFSET);
@@ -105,7 +119,7 @@ public class VKRecord extends Record {
      */
     public ValueData getValue() throws RegistryParseException, UnsupportedEncodingException {
         RegistryValueType t = this.getValueType();
-        long length = this.getDataLength();
+        long length = this.getRawDataLength();
         int offset = (int)this.getDataOffset();
 
         if (length > LARGE_DATA_SIZE + DB_DATA_SIZE) {
