@@ -179,13 +179,9 @@ public class VKRecord extends Record {
 
             case REG_QWORD: {
                 ByteBuffer data;
-                int bufSize = 0x8;
-                data = ByteBuffer.allocate(bufSize);
-                data.position(0x0);
-                data.limit(bufSize);
-                for (int i = 0; i < bufSize; i++) {
-                    data.put(this.getByte(DATA_OFFSET_OFFSET + i));
-                }
+                Cell c = new Cell(this._buf, offset);
+                data = c.getData();
+                data.limit((int)length);
                 data.position(0x0);
                 return new ValueData(data, t);
             }
