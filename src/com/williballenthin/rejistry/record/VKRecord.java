@@ -159,6 +159,7 @@ public class VKRecord extends Record {
                     data = c.getData();
                     data.limit((int)length);
                 }
+                data.position(0x0);
                 return new ValueData(data, t);
             }
 
@@ -172,6 +173,7 @@ public class VKRecord extends Record {
                 for (int i = 0; i < bufSize; i++) {
                     data.put(this.getByte(DATA_OFFSET_OFFSET + i));
                 }
+                data.position(0x0);
                 return new ValueData(data, t);
             }
 
@@ -184,6 +186,7 @@ public class VKRecord extends Record {
                 for (int i = 0; i < bufSize; i++) {
                     data.put(this.getByte(DATA_OFFSET_OFFSET + i));
                 }
+                data.position(0x0);
                 return new ValueData(data, t);
             }
 
