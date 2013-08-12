@@ -1,3 +1,9 @@
+#!/usr/bin/python
+#
+# test.py
+# This file does NOT use Rejistry. Rather, it produces the same output as ./src/Test.java (which uses Rejsitry)
+#   using python-registry as the parsing engine. So, you can execute this test script to compare the parsing
+#   performance of Rejistry.
 import re
 import argparse
 from Registry import Registry
