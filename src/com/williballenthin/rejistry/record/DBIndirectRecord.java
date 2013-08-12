@@ -22,6 +22,7 @@ public class DBIndirectRecord extends Record {
      */
     public ByteBuffer getData(int length) {
         ByteBuffer b = ByteBuffer.allocate(length);
+        b.position(0x0);
         int count = 0;
         while (length > 0) {
             int size = 0x3fd8;
@@ -34,8 +35,11 @@ public class DBIndirectRecord extends Record {
                 size = length;
             }
 
-            data.limit(size);
+            data.position(size);
             data.flip();
+            data.limit(size);
+            data.position(0x0);
+
             b.put(data);
 
             length -= size;
