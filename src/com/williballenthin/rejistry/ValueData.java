@@ -102,6 +102,7 @@ public class ValueData {
      * @return A non-negative 32bit number with the range 0-2**32-1.
      */
     private static long parseDword(ByteBuffer buf, int offset) {
+        buf.order(ByteOrder.LITTLE_ENDIAN);
         return buf.getInt(offset) & 0xFFFFFFFFL;
     }
 
@@ -117,9 +118,7 @@ public class ValueData {
      */
     private static long parseDwordBE(ByteBuffer buf, int offset) {
         buf.order(ByteOrder.BIG_ENDIAN);
-        long d = buf.getInt(offset) & 0xFFFFFFFFL;
-        buf.order(ByteOrder.LITTLE_ENDIAN);
-        return d;
+        return buf.getInt(offset) & 0xFFFFFFFFL;
     }
 
     /**
@@ -133,6 +132,7 @@ public class ValueData {
      * @return A non-negative 64bit number with the range 0-2**64-1;
      */
     protected long parseQword(ByteBuffer buf, int offset) {
+        buf.order(ByteOrder.LITTLE_ENDIAN);
         //noinspection PointlessBitwiseExpression
         return buf.getLong(offset) & 0xFFFFFFFFFFFFFFFFL;
     }
