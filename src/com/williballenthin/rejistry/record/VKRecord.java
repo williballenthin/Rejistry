@@ -4,7 +4,6 @@ import com.williballenthin.rejistry.*;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.security.InvalidParameterException;
 
 public class VKRecord extends Record {
@@ -22,9 +21,6 @@ public class VKRecord extends Record {
     private static final long LARGE_DATA_SIZE = 0x80000000L;
 
     /**
-     *
-     * @param buf
-     * @param offset
      * @throws com.williballenthin.rejistry.RegistryParseException if the magic header is not the ASCII string "vk".
      */
     public VKRecord(ByteBuffer buf, int offset) throws RegistryParseException {
@@ -149,7 +145,6 @@ public class VKRecord extends Record {
                     data = c.getData();
                     data.limit((int)length);
                 }
-                data.position(0x0);
                 return new ValueData(data, t);
             }
 
@@ -158,24 +153,23 @@ public class VKRecord extends Record {
                 ByteBuffer data;
                 int bufSize = 0x4;
                 data = ByteBuffer.allocate(bufSize);
-                data.order(ByteOrder.LITTLE_ENDIAN);
                 data.position(0x0);
                 data.limit(bufSize);
                 for (int i = 0; i < bufSize; i++) {
                     data.put(this.getByte(DATA_OFFSET_OFFSET + i));
                 }
-                data.position(0x0);
                 return new ValueData(data, t);
             }
 
             case REG_QWORD: {
                 ByteBuffer data;
                 int bufSize = 0x8;
-                Cell c = new Cell(this._buf, offset);
-                data = c.getData();
-                data.order(ByteOrder.LITTLE_ENDIAN);
-                data.limit(0x8);
+                data = ByteBuffer.allocate(bufSize);
                 data.position(0x0);
+                data.limit(bufSize);
+                for (int i = 0; i < bufSize; i++) {
+                    data.put(this.getByte(DATA_OFFSET_OFFSET + i));
+                }
                 return new ValueData(data, t);
             }
 
