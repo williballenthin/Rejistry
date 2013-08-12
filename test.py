@@ -20,8 +20,12 @@ def hexdump(src, length=16):
 
 def fix_type(s):
     map = {"RegSZ": "REG_SZ", "RegExpandSZ": "REG_EXPAND_SZ", "RegBin": "REG_BIN", "RegNone": "REG_NONE", 
-           "RegDWord": "REG_DWORD", "RegQWord": "REG_QWORD", "RegBigEndian": "REG_BIG_ENDIAN", "RegMultiSZ": "REG_MULTI_SZ"}
+           "RegDWord": "REG_DWORD", "RegQWord": "REG_QWORD", "RegBigEndian": "REG_BIG_ENDIAN",
+           "RegMultiSZ": "REG_MULTI_SZ", "RegResourceRequirementsList": "REG_RESOURCE_REQUIREMENTS_LIST",
+           "RegLink": "REG_LINK", "RegResourceList": "REG_RESOURCE_LIST",
+           "RegFullResourceDescriptor": "REG_FULL_RESOURCE_DESCRIPTOR"}
     return map.get(s, s)
+
 
 def printVKRecord(record, prefix):
     print prefix + "vkrecord has name: %s" % record.has_name()
@@ -45,7 +49,9 @@ def printVKRecord(record, prefix):
             for s in record.data()[1:]:
                 print prefix + (" " * len("vkrecord data: ")) + s
     else:
-        print prefix + "vkrecord data: unsupported"
+        print prefix + "vkrecord data: "
+        padding = prefix + (" " * len("vkrecord data: "))
+        print padding + hexdump(record.data()).replace("\n", "\n" + padding)
 
 
 def printNKRecord(record, prefix):
