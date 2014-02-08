@@ -5,9 +5,14 @@ Pure Java parser for Windows Registry hive files.
 
 Usage
 -----
-For the time being, see `src/test.java` and compare it with `./test.py`. But, as a user, you'll probably want to use
-`RegistryHiveFile` with its `getRoot()` method, and then interact with the `RegistryValue` and `RegistryKey` classes.
+For the time being, see `src/main/java/com/williballenthin/rejistry/Rejistry.java` and compare it with `./test.py`. But, as a user, you'll probably want to use `RegistryHiveFile` with its `getRoot()` method, and then interact with the `RegistryValue` and `RegistryKey` classes.
 
+Building
+--------
+
+  - Install [Apache Maven](http://maven.apache.org/)
+  - `$mvn package`
+  - This creates `./target/Rejistry-1.0-SNAPSHOT.jar`
 
 Dependencies
 ------------
