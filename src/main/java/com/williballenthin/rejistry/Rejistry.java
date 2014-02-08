@@ -1,7 +1,7 @@
-import com.williballenthin.rejistry.*;
+package com.williballenthin.rejistry;
+
 import com.williballenthin.rejistry.record.NKRecord;
 import com.williballenthin.rejistry.record.VKRecord;
-import com.williballenthin.rejistry.HexDump;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.SimpleTimeZone;
 
 
-public class Test {
+public class Rejistry {
 
     /**
      * This is silly, but it formats the same way Python does by default.
@@ -109,12 +109,20 @@ public class Test {
         }
     }
 
+    private static void printUsage() {
+        System.out.println("usage: java -cp Rejistry[...].jar Rejistry <hive file path>");
+    }
+
     /**
      * @param args
      * @throws IOException
      * @throws RegistryParseException
      */
     public static void main(String[] args) throws IOException, RegistryParseException {
+        if (args.length != 1) {
+            printUsage();
+            System.exit(1);
+        }
         File f = new File(args[0]);
         RegistryHiveFile reg = new RegistryHiveFile(f);
 

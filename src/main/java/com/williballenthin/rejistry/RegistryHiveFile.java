@@ -6,14 +6,17 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
+
 public class RegistryHiveFile implements RegistryHive {
     private ByteBuffer _buf;
 
     /**
-     * @throws IOException if the file cannot be accessed or is larger than 2GB.
+     * @throws IOException if the file cannot be accessed
      */
     public RegistryHiveFile(File file) throws IOException {
-        this._buf = ByteBuffer.wrap(RegistryHiveFile.readFile(file)).asReadOnlyBuffer();
+        this._buf = RegistryHiveFile.readFile(file);
         this._buf.order(ByteOrder.LITTLE_ENDIAN);
     }
 
@@ -28,25 +31,19 @@ public class RegistryHiveFile implements RegistryHive {
     }
 
     /**
-     * readFile reads an entire file into a byte array.
+     * readFile reads an entire file as a ByteBuffer.
      *
      * @param file The file to read.
-     * @return A byte array that contains the file.
+     * @return A ByteBuffer of the file contents
      * @throws IOException
      */
-    private static byte[] readFile(File file) throws IOException {
+    private static ByteBuffer readFile(File file) throws IOException {
         RandomAccessFile f = new RandomAccessFile(file, "r");
         try {
-            long longlength = f.length();
-            int length = (int) longlength;
-            if (length != longlength) {
-                throw new IOException("File size >= 2 GB");
-            }
-            byte[] data = new byte[length];
-            f.readFully(data);
-            return data;
+            long length = f.length();
+            return f.getChannel().map(MapMode.READ_ONLY, 0, length);
         } finally {
-            f.close();
+            f.close(); // does not affect ByteBuffer mapping
         }
     }
 }
